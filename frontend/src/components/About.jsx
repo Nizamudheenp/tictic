@@ -4,21 +4,21 @@ const About = () => {
   return (
     <section className="about-section" style={styles.section}>
       <div style={styles.container}>
-        <h1 style={styles.heading}>About Carty</h1>
+        <h1 style={styles.heading}>About tictic</h1>
         <p style={styles.text}>
-          Welcome to <strong>Carty</strong> – your one-stop destination for seamless online shopping. 
-          Founded in 2025, Carty was born out of a simple idea: to make online shopping easier, faster, 
+          Welcome to <strong>tictic</strong> – your one-stop destination for seamless toys shopping. 
+          Founded in 2025, Tictic was born out of a simple idea: to make toys shopping easier, faster, 
           and more enjoyable for everyone.
         </p>
 
         <h2 style={styles.subheading}>Our Journey</h2>
         <p style={styles.text}>
           What started as a small idea between a few passionate entrepreneurs is now one of the fastest-growing 
-          online marketplaces. From fashion and electronics to home essentials and unique handmade crafts, 
-          Carty brings together millions of products from trusted sellers across the country.
+          online toys marketplaces. From toys to kids essentials and unique handmade crafts, 
+          tictic brings together millions of products from trusted sellers across the country.
         </p>
 
-        <h2 style={styles.subheading}>Why Carty?</h2>
+        <h2 style={styles.subheading}>Why tictic?</h2>
         <ul style={styles.list}>
           <li>Wide selection of quality products at competitive prices</li>
           <li>Secure payments and fast delivery</li>
@@ -28,7 +28,7 @@ const About = () => {
 
         <h2 style={styles.subheading}>Our Vision</h2>
         <p style={styles.text}>
-          To redefine e-commerce by creating an ecosystem that empowers both customers and sellers. 
+          To redefine toys e-commerce by creating an ecosystem that empowers  customers. 
           We believe in transparent practices, reliable service, and giving our users the freedom to 
           shop on their own terms.
         </p>
@@ -36,18 +36,18 @@ const About = () => {
         <h2 style={styles.subheading}>Meet the Team</h2>
         <p style={styles.text}>
           Our team is a mix of dreamers, developers, designers, and customer champions. 
-          We work around the clock to make sure Carty stays fast, secure, and reliable — 
+          We work around the clock to make sure tictic stays fast, secure, and reliable — 
           so that every order, every delivery, and every click brings satisfaction.
         </p>
 
         <h2 style={styles.subheading}>Join Our Journey</h2>
         <p style={styles.text}>
-          Whether you're a customer looking for the best deals, or a seller wanting to grow your business, 
+          If you're a customer looking for the best dealson kids related products, 
           Carty is here for you. We’re just getting started, and the best is yet to come.
         </p>
 
         <p style={{ ...styles.text, marginTop: '2rem' }}>
-          <strong>Thank you for choosing Carty.</strong> Let’s build something great together.
+          <strong>Thank you for choosing tictic.</strong> Let’s build something great together.
         </p>
       </div>
     </section>

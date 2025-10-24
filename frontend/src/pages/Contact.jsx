@@ -45,7 +45,7 @@ const Contact = () => {
         <div className="contact-details">
           <p><strong>📍 Address:</strong>Wayanad, kerala ,India</p>
           <p><strong>📞 Phone:</strong> +91 8921041726/ +91 24356787</p>
-          <p><strong>📧 Email:</strong> support@carty.com</p>
+          <p><strong>📧 Email:</strong> ticticofficialmail@gmail.com</p>
 
           <div className="social-icons">
             <h4>Follow Us</h4>
