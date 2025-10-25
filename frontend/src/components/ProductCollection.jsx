@@ -74,7 +74,7 @@ const ProductCollection = ({ title, tag, category, search, limit }) => {
   if (!products.length) return null;
 
   return (
-    <section className="max-w-[1200px] mx-auto px-6 md:px-8 py-12" id="Product-1">
+    <section className="max-w-[1200px] mx-auto px-6 md:px-8" id="Product-1">
       <motion.h2
         className="text-2xl md:text-3xl font-bold text-gray-900"
         initial={{ opacity: 0, y: -20 }}

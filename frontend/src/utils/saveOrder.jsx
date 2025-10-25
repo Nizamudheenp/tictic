@@ -1,4 +1,3 @@
-// utils/saveOrder.js
 import axios from "axios";
 
 export const saveOrderToBackend = async ({

@@ -31,7 +31,7 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
     e.preventDefault();
     if (!stripe || !elements) return;
     if (!shippingAddress) {
-      showToast('error','please provide a shipping address')
+      showToast('error', 'please provide a shipping address')
       return;
     }
     setLoading(true);
@@ -70,56 +70,34 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          gap: "2rem",
-          padding: "2rem",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          maxWidth: "800px",
-          margin: "2rem auto",
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <h4>Select Payment Method</h4>
-          <PaymentElement />
+      <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-6 p-6 border border-gray-200 rounded-lg max-w-3xl mx-auto mt-20`}>
+        <div className="flex-1">
+          <h4 className="text-xl font-semibold text-blue-700 mb-4">Select Payment Method</h4>
+          <div className="bg-white p-4 rounded-md shadow-sm">
+            <PaymentElement />
+          </div>
         </div>
 
-        <div style={{ flex: 1 }}>
-          <h3>Order Summary</h3>
-          <p>Total Amount: <strong>₹{amount}</strong></p>
-          <label>Shipping Address:</label>
+        <div className="flex-1 mt-4 md:mt-0">
+          <h3 className="text-xl font-semibold text-blue-700 mb-3">Order Summary</h3>
+          <p className="mb-3 text-gray-700">
+            Total Amount: <strong className="text-orange-500">₹{amount}</strong>
+          </p>
+
+          <label className="block text-gray-700 mb-1">Shipping Address:</label>
           <textarea
             required
             value={shippingAddress}
             onChange={(e) => setShippingAddress(e.target.value)}
             rows="3"
             placeholder="Enter your address"
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginTop: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
+            className="w-full border border-gray-300 rounded-md p-2 mb-4 focus:ring-2 focus:ring-blue-300"
           />
 
           <button
             type="submit"
             disabled={!stripe || loading}
-            style={{
-              marginTop: "1rem",
-              padding: "10px 20px",
-              backgroundColor: "#6772e5",
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              fontSize: "16px",
-              cursor: "pointer",
-              width: "100%",
-            }}
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Processing..." : "Pay Now"}
           </button>
@@ -165,9 +143,7 @@ const PaymentPage = ({ amount, cartItems, userToken }) => {
       />
     </Elements>
   ) : (
-    <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      Loading payment options...
-    </div>
+    <div className="text-center mt-20 text-gray-600 text-lg">Loading payment options...</div>
   );
 };
 
