@@ -65,8 +65,8 @@ const AdminOrders = () => {
                 >
                   <td className="p-3">{order.userId?.name || "N/A"}</td>
                   <td className="p-3">
-                    {order.products.map((p) => (
-                      <div key={p.productId?._id}>
+                    {order.products.map((p,index) => (
+                      <div key={`${p.productId?._id || 'no-id'}-${index}`}>
                         {p.productId?.name} × {p.quantity}
                       </div>
                     ))}

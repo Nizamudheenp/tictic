@@ -14,6 +14,17 @@ exports.registerUser = async (req, res) => {
     const hashed = await bcrypt.hash(password, 10);
     const newUser = new UserDB({ name, email, password: hashed });
     await newUser.save();
+    const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin, name: newUser.name }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.json({
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        isAdmin: newUser.isAdmin
+
+      }
+    })
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -15,7 +15,7 @@ const Header = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (token && user) {
       setIsLoggedIn(true);
-      setUserInfo(user); 
+      setUserInfo(user);
     } else {
       setIsLoggedIn(false);
       setUserInfo(null);
@@ -117,7 +117,7 @@ const Header = () => {
         <aside className="absolute right-0 top-0 bottom-0 w-72 bg-white p-6 shadow-xl">
           <div className="flex items-center justify-between">
             <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
-              <img src="/images/tic-tic logo.png" alt="logo" className="h-10 w-10 rounded-full" />
+              <img src="/images/logo og.jpg" alt="logo" className="h-10 w-10 rounded-full" />
             </Link>
             <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 rounded-md">
               <BsXLg className="text-2xl" />
@@ -140,7 +140,11 @@ const Header = () => {
                 <>
                   <p className="text-sm font-medium py-2">Signed in as {userInfo?.name || 'User'}</p>
                   <Link to="/myorders" onClick={() => setIsMobileMenuOpen(false)} className="block py-2">My Orders</Link>
-                  {userInfo?.isAdmin && <Link to="/admin/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="block py-2">Admin Dashboard</Link>}
+                  {userInfo?.isAdmin && (
+                    <>
+                      <Link to="/admin/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="block py-2">Admin Dashboard</Link>
+                      <Link to="/admin/orders" onClick={() => setIsMobileMenuOpen(false)} className="block py-2">Manage Orders</Link>
+                    </>)}
                   <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="mt-3 w-full py-2 rounded-md bg-red-600 text-white">Logout</button>
                 </>
               )}
