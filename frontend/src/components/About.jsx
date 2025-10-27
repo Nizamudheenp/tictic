@@ -5,7 +5,7 @@ const About = () => {
     <section className="mt-8 bg-white py-16 px-6 md:px-20">
       <div className="max-w-4xl mx-auto space-y-8">
         <p className="text-gray-700 text-lg leading-relaxed">
-          Welcome to <strong className="text-orange-500">tictic</strong><br /> your one-stop destination for seamless toys shopping.
+          Welcome to <strong className="text-orange-500 text-2xl">tictic</strong><br /> your one-stop destination for seamless toys shopping.
           Founded in 2025, tictic was born out of a simple idea: to make toys shopping easier, faster,
           and more enjoyable for everyone.
         </p>

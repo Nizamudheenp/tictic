@@ -14,7 +14,7 @@ const SmallBanner = () => {
       className="flex flex-col md:flex-row justify-center items-center gap-6 px-6 md:px-10 py-10"
     >
       <div
-        className="flex flex-col justify-center items-start w-full md:w-1/2 h-[300px] md:h-[50vh] p-8 rounded-2xl bg-cover bg-center text-white"
+        className="flex flex-col justify-center items-start w-full md:w-1/2 h-[300px] md:h-[50vh] p-8 rounded-2xl bg-cover bg-center text-blue-900"
         style={{
           backgroundImage: "url('/images/kids-banner1.jpg')",
         }}
@@ -35,7 +35,7 @@ const SmallBanner = () => {
       </div>
 
       <div
-        className="flex flex-col justify-center items-start w-full md:w-1/2 h-[300px] md:h-[50vh] p-8 rounded-2xl bg-cover bg-center text-white"
+        className="flex flex-col justify-center items-start w-full md:w-1/2 h-[300px] md:h-[50vh] p-8 rounded-2xl bg-cover bg-center text-blue-900"
         style={{
           backgroundImage: "url('/images/kids-banner2.jpg')",
         }}

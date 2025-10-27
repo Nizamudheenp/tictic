@@ -32,7 +32,7 @@ const Product = ({ image, brand, title, price, rating, numReviews, onClick }) =>
       <img
         src={image}
         alt={title}
-        className="w-full h-48 object-cover rounded-md mb-3"
+        className="w-full h-64 object-center rounded-md mb-3 "
       />
       <div className="w-full text-left space-y-1">
         <span className="text-sm font-medium">{brand}</span>

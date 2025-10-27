@@ -32,7 +32,7 @@ const ProductCard = ({ product, onClick }) => {
       <img
         src={product.images?.[0] || '/placeholder.jpg'}
         alt={product.name}
-        className="w-full h-60 object-cover rounded-xl"
+        className="w-full h-64 object-center rounded-xl"
       />
       <div className="mt-3 text-start">
         <span className="text-gray-500 text-xs">{product.brand || 'Brand'}</span>
@@ -74,7 +74,7 @@ const ProductCollection = ({ title, tag, category, search, limit }) => {
   if (!products.length) return null;
 
   return (
-    <section className="max-w-[1200px] mx-auto px-6 md:px-8" id="Product-1">
+    <section className="max-w-[1300px] mx-auto px-6 md:px-8" id="Product-1">
       <motion.h2
         className="text-2xl md:text-3xl font-bold text-gray-900"
         initial={{ opacity: 0, y: -20 }}

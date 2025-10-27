@@ -6,9 +6,8 @@ const SmallBanner2 = () => {
       id="banner-3"
       className="flex flex-wrap justify-center md:justify-between px-4 md:px-16 py-8 gap-6"
     >
-      {/* Banner 1 */}
       <div
-        className="flex flex-col justify-center items-start w-full sm:w-[48%] lg:w-[30%] h-[30vh] p-6 rounded-xl bg-cover bg-center text-white"
+        className="flex flex-col justify-start items-start w-full sm:w-[48%] lg:w-[30%] h-[30vh] p-6 rounded-xl bg-cover bg-center text-white"
         style={{
           backgroundImage: "url('/images/banner-craft.jpg')",
         }}
@@ -19,9 +18,8 @@ const SmallBanner2 = () => {
         </h3>
       </div>
 
-      {/* Banner 2 */}
       <div
-        className="flex flex-col justify-center items-start w-full sm:w-[48%] lg:w-[30%] h-[30vh] p-6 rounded-xl bg-cover bg-center text-white"
+        className="flex flex-col justify-start items-start w-full sm:w-[48%] lg:w-[30%] h-[30vh] p-6 rounded-xl bg-cover bg-center text-white"
         style={{
           backgroundImage: "url('/images/banner-toys.jpg')",
         }}
@@ -32,17 +30,16 @@ const SmallBanner2 = () => {
         </h3>
       </div>
 
-      {/* Banner 3 */}
       <div
-        className="flex flex-col justify-center items-start w-full sm:w-[48%] lg:w-[30%] h-[30vh] p-6 rounded-xl bg-cover bg-center text-white"
+        className="flex flex-col justify-start items-start w-full sm:w-[48%] lg:w-[30%] h-[30vh] p-6 rounded-xl bg-cover bg-center text-white"
         style={{
-          backgroundImage: "url('/images/banner-namelabels.jpeg')",
+          backgroundImage: "url('/images/poster 3.jpg')",
         }}
       >
         <h2 className="text-2xl font-bold drop-shadow-md">
           Custom Name Labels
         </h2>
-        <h3 className="text-green-300 text-lg font-semibold">
+        <h3 className="text-black text-lg font-semibold">
           Playful Designs for Kids
         </h3>
       </div>
