@@ -133,7 +133,7 @@ const ProductDetails = () => {
         <img
           src={product.images?.[0] || "/placeholder.jpg"}
           alt={product.name}
-          className="rounded-xl shadow-md w-full max-w-md h-auto object-cover"
+          className="rounded-xl shadow-md w-full max-w-md md:h-[500px] sm:h-[400px]"
         />
       </div>
 

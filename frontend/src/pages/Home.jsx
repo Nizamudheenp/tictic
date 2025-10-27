@@ -1,7 +1,6 @@
 import React from 'react'
 import Hero from '../components/Hero'
 import Feature from '../components/Feature'
-import Products from '../components/Products'
 import Banner from '../components/Banner'
 import SmallBanner from '../components/SmallBanner'
 import SmallBanner2 from '../components/SmallBanner2'

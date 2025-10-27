@@ -27,7 +27,7 @@ const SmallBanner = () => {
           Bright Name Slips & Toy Sets — limited time only!
         </span>
         <button
-          className="bg-white text-pink-600 font-semibold px-6 py-2 rounded-full hover:bg-pink-100 transition-all"
+          className="bg-white text-blue-600 font-semibold px-6 py-2 rounded-full hover:bg-blue-100 transition-all"
           onClick={handleClick}
         >
           Shop Now
@@ -48,7 +48,7 @@ const SmallBanner = () => {
           Handmade crafts for creative little hands 🎨
         </span>
         <button
-          className="bg-white text-pink-600 font-semibold px-6 py-2 rounded-full hover:bg-pink-100 transition-all"
+          className="bg-white text-blue-600 font-semibold px-6 py-2 rounded-full hover:bg-blue-100 transition-all"
           onClick={handleClick}
         >
           Explore

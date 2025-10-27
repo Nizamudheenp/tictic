@@ -12,7 +12,7 @@ const NewsLetter = () => {
         </h4>
         <p className="text-gray-700 font-medium text-sm">
           Get Email Updates About Our Shop and{" "}
-          <span className="text-teal-700 font-semibold">Special Offers</span>
+          <span className="text-orange-600 font-semibold">Special Offers</span>
         </p>
       </div>
 

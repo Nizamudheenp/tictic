@@ -1,4 +1,3 @@
-// EditProduct.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -80,7 +79,6 @@ const EditProduct = () => {
           onSubmit={handleSubmit}
           className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-4"
         >
-          {/* Name */}
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Name</label>
             <input
@@ -93,7 +91,6 @@ const EditProduct = () => {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Description</label>
             <textarea
@@ -105,7 +102,6 @@ const EditProduct = () => {
             />
           </div>
 
-          {/* Price */}
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Price</label>
             <input
@@ -118,7 +114,6 @@ const EditProduct = () => {
             />
           </div>
 
-          {/* Category */}
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Category</label>
             <input
@@ -131,7 +126,6 @@ const EditProduct = () => {
             />
           </div>
 
-          {/* Brand */}
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Brand</label>
             <input
@@ -143,7 +137,6 @@ const EditProduct = () => {
             />
           </div>
 
-          {/* Tags */}
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Tags</label>
             <select
@@ -159,7 +152,6 @@ const EditProduct = () => {
             <small className="text-gray-500">Select multiple tags by holding Ctrl (or Cmd) key</small>
           </div>
 
-          {/* Images */}
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Images (URLs)</label>
             <input
@@ -173,7 +165,6 @@ const EditProduct = () => {
             <small className="text-gray-500">Enter image URLs separated by commas</small>
           </div>
 
-          {/* Preview Images */}
           <div>
             <h4 className="font-semibold mb-2 text-gray-700">Current Images</h4>
             <div className="flex flex-wrap gap-2">
@@ -183,7 +174,6 @@ const EditProduct = () => {
             </div>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="w-full py-3 mt-4 rounded-lg font-semibold text-white bg-green-500 hover:bg-green-600 transition-colors"

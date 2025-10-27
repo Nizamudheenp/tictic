@@ -1,4 +1,3 @@
-// AddProduct.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -31,7 +30,7 @@ const AddProduct = () => {
     formData.append('price', price);
     formData.append('brand', brand);
     formData.append('category', category);
-    formData.append('tags', tags);
+    tags.forEach(tag =>formData.append('tags[]', tags));
 
     const token = localStorage.getItem('token');
     setLoading(true);

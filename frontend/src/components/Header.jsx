@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BsCart2, BsPersonCircle, BsXLg, BsList } from "react-icons/bs";
+import { BsCart2, BsXLg, BsList, BsPersonFill } from "react-icons/bs";
 
 const Header = () => {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -74,7 +74,7 @@ const Header = () => {
               aria-expanded={showUserDropdown}
               className="inline-flex items-center justify-center p-1 rounded-full hover:bg-gray-100"
             >
-              <BsPersonCircle className="text-3xl text-gray-900" />
+              <BsPersonFill className="text-3xl text-gray-900" />
             </button>
 
 {/* Dropdown */}
