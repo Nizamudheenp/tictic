@@ -49,20 +49,20 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-md">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-8 py-1 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <img src="/images/logo og.jpg" alt="Logo" className="h-13 w-12 rounded-full object-cover" />
+          <img src="/images/logo og.jpg" alt="Logo" className="h-15 w-16 rounded-full object-cover" />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6 py-4">
           <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">Home</Link>
           <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">Shop</Link>
           <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">About</Link>
           <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">Contact</Link>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 py-3">
           <Link to="/cart" className="hidden sm:inline-flex items-center text-gray-800 hover:text-primary-500">
             <BsCart2 className="text-2xl" />
           </Link>

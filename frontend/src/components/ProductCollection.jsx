@@ -94,16 +94,10 @@ const ProductCollection = ({ title, tag, category, search, limit }) => {
       </motion.p>
       <motion.div
         className="flex flex-wrap gap-6 justify-start"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.15 },
-          },
-        }}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         {products.map((product) => (
           <ProductCard

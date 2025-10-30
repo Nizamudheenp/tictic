@@ -59,8 +59,8 @@ const Footer = () => {
           <h4 className="text-lg font-semibold mb-3 text-blue-700">Account</h4>
           <ul className="flex flex-col gap-2 text-sm">
             <li><a href="/coming-soon" className="hover:text-orange-600 transition">My Account</a></li>
-            <li><a href="/coming-soon" className="hover:text-orange-600 transition">Sign In</a></li>
-            <li><a href="/coming-soon" className="hover:text-orange-600 transition">View Cart</a></li>
+            <li><a href="/login" className="hover:text-orange-600 transition">Sign In</a></li>
+            <li><a href="/cart" className="hover:text-orange-600 transition">View Cart</a></li>
             <li><a href="/coming-soon" className="hover:text-orange-600 transition">Track My Order</a></li>
             <li><a href="/coming-soon" className="hover:text-orange-600 transition">Help</a></li>
           </ul>
