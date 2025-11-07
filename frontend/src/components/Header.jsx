@@ -49,7 +49,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-md">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/20 md:bg-white/20 md:backdrop-blur-md">
       <div className="max-w-[1200px] mx-auto px-6 md:px-8 py-1 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <img src="/images/logo og.jpg" alt="Logo" className="h-15 w-16 rounded-full object-cover" />
