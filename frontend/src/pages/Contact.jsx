@@ -43,7 +43,6 @@ const Contact = () => {
   return (
     <section className="mt-16 bg-white py-16 px-6 md:px-20 flex flex-col md:flex-row gap-12">
       <div className="flex-1 space-y-6">
-        <h2 className="text-3xl font-bold text-blue-700">Contact Us</h2>
         <p className="text-gray-700 text-lg leading-relaxed">
           We're here to help and answer any question you might have. We look
           forward to hearing from you! 😊

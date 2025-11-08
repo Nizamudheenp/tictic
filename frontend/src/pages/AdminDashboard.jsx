@@ -43,7 +43,7 @@ const AdminDashboard = () => {
       </button>
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
-          <div key={product._id} className="bg-white p-5 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+          <div key={product._id} className="bg-white p-5  rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
             <h3 className="text-xl font-semibold mb-2 text-gray-900">{product.name}</h3>
             <p className="text-gray-600 mb-1"><strong>Description:</strong> {product.description}</p>
             <p className="text-gray-600 mb-1"><strong>Price:</strong> ₹{product.price}</p>
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
               )}
             </div>
 
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between  mt-4">
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
                 onClick={() => navigate(`/admin/edit-product/${product._id}`)}

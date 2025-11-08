@@ -22,7 +22,7 @@ const NewsLetter = () => {
           placeholder="Your Email Address"
           className="w-full px-5 py-3 rounded-l-md outline-none border border-0 text-gray-700 focus:ring-2 focus:ring-blue-200"
         />
-        <button className="bg-blue-600 w-40 text-white px-8 py-1 rounded-r-md font-semibold hover:bg-blue-700 transition-all">
+        <button onClick={()=>location.reload()} className="bg-blue-600 w-40 text-white px-8 py-1 rounded-r-md font-semibold hover:bg-blue-700 transition-all">
           Sign up
         </button>
       </div>

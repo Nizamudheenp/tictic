@@ -29,7 +29,9 @@ const Footer = () => {
           <p className="text-sm mb-1">
             <strong>Phone:</strong> +91 8921041725 / +91 24356787
           </p>
-
+          <p className="text-sm mb-1">
+            <strong>Email:</strong> ticticofficialmail@gmail.com
+          </p>
           <div className="mt-4">
             <h4 className="text-lg font-semibold mb-2 text-blue-700">
               Follow Us
