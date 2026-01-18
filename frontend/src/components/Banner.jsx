@@ -11,7 +11,7 @@ const Banner = () => {
   return (
     <section
       id="banner"
-      className="relative flex flex-col items-center justify-center text-center w-full h-[45vh] bg-cover bg-center px-4"
+      className="relative flex flex-col items-center justify-center text-center w-full h-[90vh]  px-4  bg-gradient-to-b from-slate-50 via-sky-200 to-slate-50"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/30 to-white/70 backdrop-blur-[1px]" />
 

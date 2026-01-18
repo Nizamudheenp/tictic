@@ -56,14 +56,14 @@ const Header = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 py-4">
-          <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">Home</Link>
-          <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">Shop</Link>
-          <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">About</Link>
-          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-800 hover:text-primary-500">Contact</Link>
+          <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-900 hover:text-primary-500">Home</Link>
+          <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-900 hover:text-primary-600">Shop</Link>
+          <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-900 hover:text-primary-600">About</Link>
+          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-gray-900 hover:text-primary-600">Contact</Link>
         </nav>
 
         <div className="flex items-center gap-4 py-3">
-          <Link to="/cart" className="hidden sm:inline-flex items-center text-gray-800 hover:text-primary-500">
+          <Link to="/cart" className="hidden sm:inline-flex items-center text-gray-900 hover:text-primary-600">
             <BsCart2 className="text-2xl" />
           </Link>
 
@@ -72,7 +72,7 @@ const Header = () => {
               onClick={handleUserIconClick}
               aria-haspopup="true"
               aria-expanded={showUserDropdown}
-              className="inline-flex items-center justify-center p-1 rounded-full hover:bg-gray-100"
+              className="inline-flex items-center justify-center p-1 rounded-full hover:bg-primary-500"
             >
               <BsPersonFill className="text-3xl text-gray-900" />
             </button>
