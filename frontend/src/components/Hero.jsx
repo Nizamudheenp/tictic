@@ -7,7 +7,7 @@ const Hero = () => {
 
   return (
     <section
-      className="min-h-[100vh] bg-[url('/images/main-bg.jpg')] bg-cover bg-center flex items-center"
+      className="min-h-[100vh] bg-[url('/images/main-bg.jpg')] bg-cover object-cover bg-center flex items-center"
     >
       <div className="max-w-[1200px]  px-6 md:px-12 lg:px-16 py-24">
         <div className="bg-white/40 backdrop-blur-md rounded-2xl p-8 md:p-10 max-w-2xl">
