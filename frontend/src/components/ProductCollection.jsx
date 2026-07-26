@@ -85,16 +85,16 @@ const ProductCard = ({ product, onClick }) => {
         </div>
       </div>
 
-      {/* Card bottom section with Add To Cart button */}
-      <div className="px-2 pt-3 pb-1 flex items-center justify-between border-t border-gray-50 mt-3">
-        <h4 className="text-base font-black text-gray-950">₹{product.price}</h4>
+      {/* Card bottom section with Add To Cart button as a block */}
+      <div className="px-2 pt-3 pb-1 border-t border-gray-50 mt-3 flex flex-col gap-2">
+        <h4 className="text-base font-black text-gray-950 text-start">₹{product.price}</h4>
         
         <button
           onClick={handleAddToCart}
-          className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-full text-white bg-gradient-to-r from-primary-500 to-yellow-400 hover:shadow-md transition-all active:scale-95"
+          className="w-[60%] mx-auto flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold rounded-full text-white bg-gradient-to-r from-primary-500 to-yellow-400 hover:shadow-md transition-all active:scale-95"
         >
           <FiShoppingCart className="text-sm" />
-          <span>Add</span>
+          <span>Add to Cart</span>
         </button>
       </div>
     </motion.div>
