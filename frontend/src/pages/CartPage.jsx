@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../utils/toast";
+import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -44,8 +45,10 @@ const CartPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCart();
+      showToast("success", "Item removed from cart");
     } catch (err) {
       console.error("Error removing item:", err);
+      showToast("error", "Error removing item");
     }
   };
 
@@ -64,78 +67,138 @@ const CartPage = () => {
 
   if (loading)
     return (
-      <div className="text-center py-16 text-lg text-gray-600">Loading cart...</div>
+      <div className="text-center py-32 text-lg font-medium text-primary-600 animate-pulse">
+        Loading cart items...
+      </div>
     );
 
   return (
-    <div className="mt-16 max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md my-8">
-      <h2 className="text-3xl font-bold text-blue-700 text-left mb-8">My Cart</h2>
+    <div className="max-w-5xl mx-auto px-6 py-24 mt-10">
+      
+      {/* Title */}
+      <div className="max-w-xl text-start mb-10">
+        <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-600 bg-primary-50 rounded-lg mb-3">
+          Shopping Cart
+        </span>
+        <h2 className="text-3xl md:text-5xl font-black text-gray-950 tracking-tight">
+          Your Selection
+        </h2>
+      </div>
 
       {cartItems.length === 0 ? (
-        <p className="text-center text-gray-600 text-lg">cart is empty.</p>
+        <div className="bg-slate-50 border border-gray-100 rounded-3xl p-12 text-center max-w-lg mx-auto shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6 text-2xl text-gray-400">
+            <FiShoppingCart />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">Your cart is empty</h3>
+          <p className="text-sm text-gray-500 mb-6">Looks like you haven't added anything to your cart yet.</p>
+          <button
+            onClick={() => navigate("/shop")}
+            className="px-6 py-2.5 text-xs font-bold rounded-full text-white bg-gradient-to-r from-primary-500 to-yellow-400 hover:shadow-md transition active:scale-95"
+          >
+            Start Shopping
+          </button>
+        </div>
       ) : (
-        <div className="space-y-6">
-          {cartItems.map((item) => (
-            <div key={item.product._id} className="flex flex-col md:flex-row items-center gap-4 border-b pb-4">
-              <div className="flex-shrink-0 w-full md:w-40">
-                <img
-                  src={item.product.images?.[0] || "/placeholder.jpg"}
-                  alt={item.product.name}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-              </div>
-
-              <div className="flex-1 flex flex-col gap-2">
-                <h4 className="text-xl font-semibold text-gray-800">{item.product.name}</h4>
-                <p className="text-gray-700">Price: ₹{item.product.price}</p>
-
-                <div className="flex items-center gap-2">
-                  <label className="text-gray-700">Quantity:</label>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
-                      disabled={item.quantity <= 1}
-                      className="w-8 h-8 bg-gray-200 rounded-md text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
-                    >
-                      −
-                    </button>
-                    <input
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(item.product._id, parseInt(e.target.value))
-                      }
-                      min="1"
-                      className="w-16 text-center border border-gray-300 rounded-md p-1"
-                    />
-                    <button
-                      onClick={() => handleQuantityChange(item.product._id, item.quantity + 1)}
-                      className="w-8 h-8 bg-gray-200 rounded-md text-lg font-bold hover:bg-gray-300 transition"
-                    >
-                      +
-                    </button>
-                  </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Cart Items List */}
+          <div className="lg:col-span-8 space-y-4">
+            {cartItems.map((item) => (
+              <div
+                key={item.product._id}
+                className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-md transition duration-300"
+              >
+                {/* Image Frame */}
+                <div className="flex-shrink-0 w-28 h-28 bg-slate-50 border border-gray-50 rounded-2xl flex items-center justify-center p-3 overflow-hidden">
+                  <img
+                    src={item.product.images?.[0] || "/placeholder.jpg"}
+                    alt={item.product.name}
+                    className="max-w-full max-h-full object-contain"
+                    onError={(e) => {
+                      e.target.src = "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=300&q=80";
+                    }}
+                  />
                 </div>
 
-                <button
-                  onClick={() => handleRemove(item.product._id)}
-                  className="mt-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md w-32 transition"
-                >
-                  Remove
-                </button>
+                {/* Details */}
+                <div className="flex-1 text-start space-y-2 w-full">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      {item.product.brand && (
+                        <span className="text-[10px] font-bold text-primary-500 uppercase tracking-wide">
+                          {item.product.brand}
+                        </span>
+                      )}
+                      <h4 className="text-base font-bold text-gray-900 leading-snug line-clamp-1">
+                        {item.product.name}
+                      </h4>
+                    </div>
+                    <button
+                      onClick={() => handleRemove(item.product._id)}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition duration-150"
+                      aria-label="Remove item"
+                    >
+                      <FiTrash2 className="text-lg" />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <p className="text-gray-950 font-black text-base">₹{item.product.price}</p>
+                    
+                    {/* Quantity controls */}
+                    <div className="flex items-center border border-gray-200 rounded-full px-2 py-1 bg-gray-50">
+                      <button
+                        onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        className="w-7 h-7 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                      >
+                        <FiMinus className="text-xs" />
+                      </button>
+                      <span className="w-10 text-center text-xs font-bold text-gray-800">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => handleQuantityChange(item.product._id, item.quantity + 1)}
+                        className="w-7 h-7 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-200 transition"
+                      >
+                        <FiPlus className="text-xs" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Cart Summary Card */}
+          <div className="lg:col-span-4 bg-white border border-gray-100 rounded-3xl p-6 shadow-md text-start space-y-6">
+            <h3 className="text-lg font-bold text-gray-900">Summary</h3>
+            
+            <div className="space-y-3 text-sm text-gray-500 border-b border-gray-100 pb-4">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span className="font-bold text-gray-800">₹{totalPrice}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping</span>
+                <span className="text-green-600 font-bold">Free</span>
               </div>
             </div>
-          ))}
 
-          <div className="text-right mt-6">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-3">Total: ₹{totalPrice}</h3>
+            <div className="flex justify-between items-center">
+              <span className="text-base font-bold text-gray-950">Total</span>
+              <span className="text-2xl font-black text-gray-950">₹{totalPrice}</span>
+            </div>
+
             <button
               onClick={handleCheckout}
-              className="bg-blue-700 hover:bg-orange-600 text-white px-6 py-3 rounded-md font-semibold transition"
+              className="w-full bg-gradient-to-r from-primary-500 to-yellow-400 text-white font-bold py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transform transition-all duration-200"
             >
               Proceed to Checkout
             </button>
           </div>
+
         </div>
       )}
     </div>

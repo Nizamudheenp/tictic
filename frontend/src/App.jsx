@@ -21,6 +21,7 @@ import Contact from './pages/Contact';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Toaster } from 'react-hot-toast';
 import ComingSoon from './pages/ComingSoon';
+import NotFound from './pages/NotFound';
 
 
 
@@ -97,6 +98,7 @@ function App() {
               <AdminOrders />
             </AdminRoute>
           } />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       {shouldShowFooter && <Footer />}
