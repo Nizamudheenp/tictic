@@ -10,6 +10,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { saveOrderToBackend } from "../utils/saveOrder";
 import { showToast } from "../utils/toast";
+import { motion } from "framer-motion";
+import { FiMapPin, FiCreditCard, FiArrowRight, FiShoppingBag, FiInfo } from "react-icons/fi";
+
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
@@ -31,7 +34,7 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
     e.preventDefault();
     if (!stripe || !elements) return;
     if (!shippingAddress) {
-      showToast('error', 'please provide a shipping address')
+      showToast('error', 'Please provide a shipping address');
       return;
     }
     setLoading(true);
@@ -47,6 +50,7 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
 
       if (error) {
         console.error("Payment error", error.message);
+        showToast('error', error.message || 'Payment failed');
       } else if (paymentIntent && paymentIntent.status === "succeeded") {
         await saveOrderToBackend({
           cartItems,
@@ -59,7 +63,6 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
         await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/clearCart`, {
           headers: { Authorization: `Bearer ${userToken}` },
         });
-
       }
     } catch (error) {
       console.error("Error during payment or saving order:", error.message);
@@ -69,37 +72,70 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-6 p-6 border border-gray-200 rounded-lg max-w-3xl mx-auto mt-20`}>
-        <div className="flex-1">
-          <h4 className="text-xl font-semibold text-blue-700 mb-4">Select Payment Method</h4>
-          <div className="bg-white p-4 rounded-md shadow-sm">
+    <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto z-10 relative">
+      <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 p-6 md:p-8 bg-white border border-gray-100 rounded-3xl shadow-xl`}>
+        {/* Left Side: Payment Element */}
+        <div className="flex-[1.2] text-start">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-500">
+              <FiCreditCard />
+            </div>
+            <h4 className="text-lg font-bold text-gray-900">Select Payment Method</h4>
+          </div>
+          <div className="border border-gray-100 rounded-2xl p-4 md:p-6 bg-slate-50/50">
             <PaymentElement />
           </div>
         </div>
 
-        <div className="flex-1 mt-4 md:mt-0">
-          <h3 className="text-xl font-semibold text-blue-700 mb-3">Order Summary</h3>
-          <p className="mb-3 text-gray-700">
-            Total Amount: <strong className="text-orange-500">₹{amount}</strong>
-          </p>
+        {/* Right Side: Order Summary & Address */}
+        <div className="flex-1 text-start flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 rounded-lg bg-accent-50 flex items-center justify-center text-accent-500">
+                <FiShoppingBag />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900">Order Summary</h3>
+            </div>
 
-          <label className="block text-gray-700 mb-1">Shipping Address:</label>
-          <textarea
-            required
-            value={shippingAddress}
-            onChange={(e) => setShippingAddress(e.target.value)}
-            rows="3"
-            placeholder="Enter your address"
-            className="w-full border border-gray-300 rounded-md p-2 mb-4 focus:ring-2 focus:ring-blue-300"
-          />
+            {/* Total Highlight */}
+            <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl mb-6 flex justify-between items-center">
+              <span className="text-sm text-gray-500 font-medium">Grand Total</span>
+              <strong className="text-xl font-black text-primary-600">₹{amount}</strong>
+            </div>
+
+            {/* Shipping Address field */}
+            <div className="space-y-2 mb-6">
+              <label className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-wide">
+                <FiMapPin /> Shipping Address
+              </label>
+              <textarea
+                required
+                value={shippingAddress}
+                onChange={(e) => setShippingAddress(e.target.value)}
+                rows="3"
+                placeholder="Enter your full shipping address..."
+                className="w-full border border-gray-200 rounded-2xl p-3.5 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all text-sm text-gray-800 placeholder-gray-400"
+              />
+            </div>
+
+            <div className="flex items-start gap-2 bg-blue-50/50 border border-blue-100 rounded-2xl p-4 mb-6 text-xs text-blue-700 leading-relaxed">
+              <FiInfo className="mt-0.5 flex-shrink-0" />
+              <span>Payments are processed securely via Stripe.</span>
+            </div>
+          </div>
 
           <button
             type="submit"
             disabled={!stripe || loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-primary-500 to-indigo-600 hover:from-primary-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary-500/10 hover:shadow-xl transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm mt-4"
           >
-            {loading ? "Processing..." : "Pay Now"}
+            {loading ? (
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <>
+                Confirm & Pay <FiArrowRight size={16} />
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -134,16 +170,53 @@ const PaymentPage = ({ amount, cartItems, userToken }) => {
     appearance,
   };
 
-  return clientSecret ? (
-    <Elements stripe={stripePromise} options={options}>
-      <CheckoutForm
-        amount={amount}
-        cartItems={cartItems}
-        userToken={userToken}
-      />
-    </Elements>
-  ) : (
-    <div className="text-center mt-20 text-gray-600 text-lg">Loading payment options...</div>
+  return (
+    <div className="relative min-h-screen flex items-center justify-center bg-slate-50 px-4 pt-28 pb-16 overflow-hidden">
+      {/* Decorative Background Blobs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{
+            scale: [1, 1.15, 1],
+            x: [0, 30, 0],
+            y: [0, -40, 0],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-40 -left-40 w-96 h-96 bg-primary-100 rounded-full blur-3xl opacity-60"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -bottom-40 -right-40 w-96 h-96 bg-accent-100 rounded-full blur-3xl opacity-50"
+        />
+      </div>
+
+      {clientSecret ? (
+        <Elements stripe={stripePromise} options={options}>
+          <CheckoutForm
+            amount={amount}
+            cartItems={cartItems}
+            userToken={userToken}
+          />
+        </Elements>
+      ) : (
+        <div className="z-10 flex flex-col items-center gap-4">
+          <span className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-semibold text-gray-500">Initializing secure checkout...</p>
+        </div>
+      )}
+    </div>
   );
 };
 
