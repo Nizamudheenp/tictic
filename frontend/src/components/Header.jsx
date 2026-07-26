@@ -53,7 +53,7 @@ const Header = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-lg border-b border-gray-100 shadow-sm transition-all duration-300">
         <div className="max-w-[1200px] mx-auto px-6 md:px-8 flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-2">
-            <img src="public\images\sancart-w-full.png" alt="sancart" className="h-10 md:h-12 w-auto object-contain" />
+            <img src="/images/sancart-w-full.png" alt="sancart" className="h-10 md:h-12 w-auto object-contain" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">

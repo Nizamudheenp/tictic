@@ -104,13 +104,13 @@ function App() {
       {shouldShowFooter && <Footer />}
 
       <Toaster 
-        position="top-right" 
+        position="bottom-right" 
         toastOptions={{
-          duration: 3000,
+          duration: 2000,
           style: {
-            background: '#333',
+            background: '#000',
             color: '#fff',
-            borderRadius: '8px',
+            borderRadius: '10px',
           },
         }}
       />
