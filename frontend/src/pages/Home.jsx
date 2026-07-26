@@ -1,32 +1,26 @@
-import React, { lazy } from 'react'
+import React from 'react'
 import Hero from '../components/Hero'
-import Feature from '../components/Feature'
 import Banner from '../components/Banner'
 import SmallBanner from '../components/SmallBanner'
 import SmallBanner2 from '../components/SmallBanner2'
 import NewsLetter from '../components/NewsLetter'
 import ProductCollection from '../components/ProductCollection'
-import { Suspense } from 'react'
-const MediaOne = lazy(() => import("../components/MediaOne"));
+import TrustBadges from '../components/TrustBadges'
+import CategoryShowcase from '../components/CategoryShowcase'
+import Testimonials from '../components/Testimonials'
 
 function Home() {
-
-  const Skeleton = ({ h }) => (
-    <div className={`bg-gray-200 animate-pulse ${h}`} />
-  );
-
   return (
-    <div>
+    <div className="pt-20">
       <Hero />
-      <Feature />
-      <Suspense fallback={<Skeleton h="h-screen"/>}>
-        <MediaOne />
-      </Suspense>
+      <TrustBadges />
+      <CategoryShowcase />
       <ProductCollection title="Featured Products" tag="Top Brand" limit={8} />
       <Banner />
       <ProductCollection title="Trending Collections" tag="Interested In" limit={8} />
       <SmallBanner />
       <SmallBanner2 />
+      <Testimonials />
       <NewsLetter />
     </div>
   )
