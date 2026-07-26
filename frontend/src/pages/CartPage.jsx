@@ -116,7 +116,7 @@ const CartPage = () => {
                     alt={item.product.name}
                     className="max-w-full max-h-full object-contain"
                     onError={(e) => {
-                      e.target.src = "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=300&q=80";
+                      e.target.src = "/placeholder.jpg";
                     }}
                   />
                 </div>

@@ -63,7 +63,7 @@ const ProductCard = ({ product, onClick }) => {
             alt={product.name}
             className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
-              e.target.src = "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80";
+              e.target.src = "/placeholder.jpg";
             }}
           />
           {product.brand && (

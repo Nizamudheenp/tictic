@@ -56,7 +56,7 @@ const Hero = () => {
                   alt="Trending showcase"
                   className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                   onError={(e) => {
-                    e.target.src = "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80";
+                    e.target.src = "/placeholder.jpg";
                   }}
                 />
               </div>
