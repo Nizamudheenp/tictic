@@ -1,12 +1,39 @@
-# React + Vite
+# sancart Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium trending e-commerce web application front-end interface, optimized for high conversion rates, responsive shopping layout experiences, and smooth interactive animations.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Branded Premium Look**: Clean, state-of-the-art visual grids matching the blue-to-yellow color gradient themes.
+- **Redesigned Glassmorphism Navigation**: Floating navigation bar with responsive mobile sliding drawer layouts.
+- **Enhanced Product Catalog Grid**: Constrained image displays preventing cropping, custom star ratings, and integrated instant "Add to Cart" actions.
+- **Trust-building & Category Grids**: Incorporates custom Trust Badges, verified Customer Testimonials, and modern Category Showcase grids.
+- **Modern Animations**: Powered by Framer Motion for responsive, lightweight micro-animations.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Technologies Used
+
+- **Framework**: React (Vite-powered)
+- **Styling**: Tailwind CSS
+- **Icons**: React Icons (Bs, Fi, Fa, Ai)
+- **Animations**: Framer Motion
+- **API Fetching**: Axios
+
+---
+
+## Getting Started
+
+### Installation
+Install project dependencies:
+```bash
+npm install
+```
+
+### Run Locally
+Start the development server:
+```bash
+npm run dev
+```
