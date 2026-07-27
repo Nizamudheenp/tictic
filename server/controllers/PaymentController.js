@@ -1,24 +1,24 @@
 const Stripe = require('stripe');
+const PaymentIntentRequestDTO = require('../dtos/paymentdto/PaymentIntentRequestDTO');
+const PaymentIntentResponseDTO = require('../dtos/paymentdto/PaymentIntentResponseDTO');
 require("dotenv").config();
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.createPaymentIntent = async (req, res) => {
   try {
-    const { amount } = req.body;
+    const paymentReq = new PaymentIntentRequestDTO(req.body);
 
     //  PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), 
+      amount: Math.round(paymentReq.amount * 100), 
       currency: 'inr', 
       automatic_payment_methods: { enabled: true }, 
     });
 
-    res.json({
-      clientSecret: paymentIntent.client_secret,
-    });
+    res.json(new PaymentIntentResponseDTO(paymentIntent));
   } catch (error) {
     console.error("Error creating payment intent:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

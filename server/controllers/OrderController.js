@@ -1,35 +1,32 @@
 const orderDB = require("../models/OrderModel");
+const OrderResponseDTO = require("../dtos/orderdto/OrderResponseDTO");
+const CreateOrderRequestDTO = require("../dtos/orderdto/CreateOrderRequestDTO");
+const UpdateOrderStatusRequestDTO = require("../dtos/orderdto/UpdateOrderStatusRequestDTO");
 
 exports.createOrder = async (req, res) => {
   try {
-    const {
-      products,
-      totalAmount,
-      shippingAddress,
-      paymentIntentId,
-      status,
-    } = req.body;
+    const orderReq = new CreateOrderRequestDTO(req.body);
 
-    if (!products || products.length === 0) {
+    if (!orderReq.products || orderReq.products.length === 0) {
       return res.status(400).json({ message: "Order must contain at least one product." });
     }
 
-    if (!shippingAddress || !totalAmount || !paymentIntentId || !status) {
+    if (!orderReq.shippingAddress || !orderReq.totalAmount || !orderReq.paymentIntentId || !orderReq.status) {
       return res.status(400).json({ message: "Required order/payment data missing." });
     }
 
     const order = new orderDB({
       userId: req.user.id,
-      products,
-      totalAmount,
-      shippingAddress,
-      paymentIntentId,
-      status,
+      products: orderReq.products,
+      totalAmount: orderReq.totalAmount,
+      shippingAddress: orderReq.shippingAddress,
+      paymentIntentId: orderReq.paymentIntentId,
+      status: orderReq.status,
       timestamp: new Date(),
     });
 
     const newOrder = await order.save();
-    res.status(201).json(newOrder);
+    res.status(201).json(new OrderResponseDTO(newOrder));
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -37,12 +34,12 @@ exports.createOrder = async (req, res) => {
 
 exports.updateOrderStatus = async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const statusReq = new UpdateOrderStatusRequestDTO(req.body);
 
   try {
     const updatedOrder = await orderDB.findByIdAndUpdate(
       id,
-      { status },
+      { status: statusReq.status },
       { new: true }
     );
 
@@ -50,7 +47,7 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    res.json(updatedOrder);
+    res.json(new OrderResponseDTO(updatedOrder));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -64,7 +61,7 @@ exports.getUserOrders = async (req, res) => {
       .populate('products.productId')
       .sort({ createdAt: -1 });
 
-    res.json(orders);
+    res.json(orders.map(order => new OrderResponseDTO(order)));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -78,7 +75,7 @@ exports.getAllOrders = async (req, res) => {
       .populate('userId', 'name email')
       .sort({ createdAt: -1 });
 
-    res.json(orders);
+    res.json(orders.map(order => new OrderResponseDTO(order)));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
