@@ -1,3 +1,6 @@
+const CreateProductRequestDTO = require("../dtos/productdto/CreateProductRequestDTO");
+const ProductResponseDTO = require("../dtos/productdto/ProductResponseDTO");
+const UpdateProductRequestDTO = require("../dtos/productdto/UpdateProductRequestDTO");
 const ProductDB = require("../models/ProductModel");
 const ReviewDB = require('../models/reviewModel');
 const mongoose = require('mongoose')
@@ -21,7 +24,7 @@ exports.getProducts = async (req, res) => {
     }
 
     const products = await query.exec();
-    res.json(products);
+    res.json(products.map(product => new ProductResponseDTO(product)));
   } catch (err) {
     console.error('Error fetching products:', err);
     res.status(500).json({ error: 'Server error' });
@@ -31,8 +34,8 @@ exports.getProducts = async (req, res) => {
 exports.addReview = async (req, res) => {
   const { rating, comment } = req.body;
   const { productId } = req.params;
-  const userId = req.user.id; 
-  const userName = req.user.name; 
+  const userId = req.user.id;
+  const userName = req.user.name;
 
   if (!userName) {
     return res.status(400).json({ message: 'User name is required.' });
@@ -82,25 +85,25 @@ exports.addReview = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, tags, stock ,brand } = req.body;
-    const images = req.files?.map(file => file.path);
-    if (!name || !description || !price || !category || !brand || !images || images.length === 0) {
+    const createDto = new CreateProductRequestDTO(req.body, req.files);
+
+    if (!createDto.name || !createDto.description || !createDto.price || !createDto.category || !createDto.brand || !createDto.images || createDto.images.length === 0) {
       return res.status(400).json({ message: "All fields including images are required" });
     }
 
     const newProduct = new ProductDB({
-      name,
-      description,
-      price,
-      category,
-      tags,
-      brand,
-      stock,
-      images
+      name: createDto.name,
+      description: createDto.description,
+      price: createDto.price,
+      category: createDto.category,
+      tags: createDto.tags,
+      brand: createDto.brand,
+      stock: createDto.stock,
+      images: createDto.images
     });
 
     const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
+    res.status(201).json(new ProductResponseDTO(savedProduct));
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -108,20 +111,20 @@ exports.createProduct = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
   try {
-      const product = await ProductDB.findOne({ _id: req.params.id }).populate('reviews');
-      if (!product) {
-          res.status(404).json({ message: "product not found" })
-      }
-      return res.status(201).json(product);
+    const product = await ProductDB.findOne({ _id: req.params.id }).populate('reviews');
+    if (!product) {
+     return res.status(404).json({ message: "product not found" })
+    }
+    return res.status(200).json(new ProductResponseDTO(product));
   } catch (error) {
-      res.status(500).json({ message: "Server Error", error: error.message });
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 }
 
 exports.getFeaturedProducts = async (req, res) => {
   try {
     const featured = await ProductDB.find({ tags: "featured" }).limit(10);
-    res.json(featured);
+    res.json(featured.map(product => new ProductResponseDTO(product)));
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -130,23 +133,22 @@ exports.getFeaturedProducts = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try {
-    const { name, description, price, category, tags, stock , brand } = req.body;
-    const images = req.files?.map(file => file.path); 
+    const updateDto = new UpdateProductRequestDTO(req.body, req.files);
 
     const product = await ProductDB.findById(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    product.name = name || product.name;
-    product.description = description || product.description;
-    product.price = price || product.price;
-    product.brand = brand || product.brand;
-    product.category = category || product.category;
-    product.tags = tags || product.tags;
-    product.stock = stock ?? product.stock;
-    if (images && images.length > 0) product.images = images;
+    product.name = updateDto.name || product.name;
+    product.description = updateDto.description || product.description;
+    product.price = updateDto.price || product.price;
+    product.brand = updateDto.brand || product.brand;
+    product.category = updateDto.category || product.category;
+    product.tags = updateDto.tags || product.tags;
+    product.stock = updateDto.stock ?? product.stock;
+    if (updateDto.images && updateDto.images.length > 0) product.images = updateDto.images;
 
     const updated = await product.save();
-    res.status(200).json(updated);
+    res.status(200).json(new ProductResponseDTO(updated));
   } catch (error) {
     return res.status(500).json({ message: "Server Error", error: error.message });
   }
@@ -155,14 +157,14 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   try {
-      const product = await ProductDB.findById(req.params.id);
-      if (!product) return res.status(404).json({ message: "Product not found" })
+    const product = await ProductDB.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" })
 
-      await product.deleteOne()
-      res.json({ message: "Product deleted" })
+    await product.deleteOne()
+    res.json({ message: "Product deleted" })
 
   } catch (error) {
-      return res.status(500).json({ message: "Server Error", error: error.message });
+    return res.status(500).json({ message: "Server Error", error: error.message });
   }
 }
 
