@@ -1,6 +1,7 @@
 const CreateProductRequestDTO = require("../dtos/productdto/CreateProductRequestDTO");
 const ProductResponseDTO = require("../dtos/productdto/ProductResponseDTO");
 const UpdateProductRequestDTO = require("../dtos/productdto/UpdateProductRequestDTO");
+const AddReviewRequestDTO = require("../dtos/reviewdto/AddReviewRequestDTO");
 const ProductDB = require("../models/ProductModel");
 const ReviewDB = require('../models/reviewModel');
 const mongoose = require('mongoose')
@@ -32,7 +33,7 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.addReview = async (req, res) => {
-  const { rating, comment } = req.body;
+  const reviewReq = new AddReviewRequestDTO(req.body);
   const { productId } = req.params;
   const userId = req.user.id;
   const userName = req.user.name;
@@ -41,7 +42,7 @@ exports.addReview = async (req, res) => {
     return res.status(400).json({ message: 'User name is required.' });
   }
 
-  if (rating === undefined || rating === null) {
+  if (reviewReq.rating === undefined || reviewReq.rating === null) {
     return res.status(400).json({ message: 'Rating is required.' });
   }
 
@@ -59,8 +60,8 @@ exports.addReview = async (req, res) => {
     const review = await ReviewDB.create({
       user: userId,
       name: userName,
-      rating: Number(rating),
-      comment,
+      rating: reviewReq.rating,
+      comment: reviewReq.comment,
       product: productId,
     });
 

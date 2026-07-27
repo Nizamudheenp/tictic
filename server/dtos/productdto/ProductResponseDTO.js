@@ -1,3 +1,5 @@
+const ReviewResponseDTO = require("../reviewdto/ReviewResponseDTO");
+
 class ProductResponseDTO{
     constructor(product){
         this.id = product._id;
@@ -11,7 +13,9 @@ class ProductResponseDTO{
         this.stock = product.stock || 0;
         this.rating = product.rating || 0;
         this.numReviews = product.numReviews || 0;
-        this.reviews = product.reviews || [];
+        this.reviews = product.reviews 
+            ? product.reviews.map(r => r.comment ? new ReviewResponseDTO(r) : r)
+            : [];
         this.createdAt = product.createdAt;
     }
 }
