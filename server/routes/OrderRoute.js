@@ -4,15 +4,18 @@ const { createOrder, getUserOrders, getAllOrders, updateOrderStatus } = require(
 const { verifyAdmin } = require('../middleware/AuthMiddleware.js');
 const { createPaymentIntent } = require('../controllers/PaymentController.js');
 const { contactEmail } = require('../controllers/MessageController.js');
+const validate = require('../middleware/validate');
+const { createOrderSchema, updateOrderStatusSchema } = require('../validators/orderValidator');
+const { createPaymentIntentSchema } = require('../validators/paymentValidator');
+const { contactMessageSchema } = require('../validators/messageValidator');
 const router = express.Router();
 
-router.post('/createorder', verifyToken, createOrder);
+router.post('/createorder', verifyToken, validate(createOrderSchema), createOrder);
 router.get('/getuserorders', verifyToken, getUserOrders);
-router.get('/getAllOrders',verifyToken, verifyAdmin, getAllOrders);
-router.post('/create-payment-intent', createPaymentIntent);
-router.put('/updateorderstatus/:id',verifyToken, verifyAdmin, updateOrderStatus);
+router.get('/getAllOrders', verifyToken, verifyAdmin, getAllOrders);
+router.post('/create-payment-intent', validate(createPaymentIntentSchema), createPaymentIntent);
+router.put('/updateorderstatus/:id', verifyToken, verifyAdmin, validate(updateOrderStatusSchema), updateOrderStatus);
 
-router.post('/contact', verifyToken, contactEmail);
-
+router.post('/contact', verifyToken, validate(contactMessageSchema), contactEmail);
 
 module.exports = router;
