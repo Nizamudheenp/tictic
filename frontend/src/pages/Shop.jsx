@@ -36,7 +36,7 @@ const ProductCard = ({ product, onClick }) => {
     try {
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/products/addToCart`,
-        { productId: product._id, quantity: 1 },
+        { productId: product.id, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       showToast("success", "Added to cart!");
@@ -150,9 +150,9 @@ const Shop = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <ProductCard
-              key={product._id}
+              key={product.id}
               product={product}
-              onClick={() => navigate(`/product/${product._id}`)}
+              onClick={() => navigate(`/product/${product.id}`)}
             />
           ))}
         </div>

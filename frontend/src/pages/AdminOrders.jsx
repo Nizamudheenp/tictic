@@ -43,7 +43,7 @@ const AdminOrders = () => {
 
       setOrders((prev) =>
         prev.map((order) =>
-          order._id === orderId ? { ...order, status: res.data.status } : order
+          order.id === orderId ? { ...order, status: res.data.status } : order
         )
       );
     } catch (err) {
@@ -192,7 +192,7 @@ const AdminOrders = () => {
                     const badge = getStatusBadge(order.status);
                     return (
                       <tr
-                        key={order._id}
+                        key={order.id}
                         className="hover:bg-slate-50/50 transition duration-150"
                       >
                         {/* User Details */}
@@ -206,7 +206,7 @@ const AdminOrders = () => {
                                 {order.userId?.name || "Anonymous User"}
                               </p>
                               <p className="text-[10px] text-gray-400 font-medium tracking-tight">
-                                ID: #{order._id.substring(order._id.length - 8).toUpperCase()}
+                                ID: #{order.id.substring(order.id.length - 8).toUpperCase()}
                               </p>
                             </div>
                           </div>
@@ -217,7 +217,7 @@ const AdminOrders = () => {
                           <div className="space-y-2 text-start">
                             {order.products.map((p, index) => (
                               <div
-                                key={`${p.productId?._id || "no-id"}-${index}`}
+                                key={`${p.productId?.id || "no-id"}-${index}`}
                                 className="flex items-center gap-2"
                               >
                                 <div className="w-8 h-8 border border-gray-100 bg-white rounded-lg flex items-center justify-center p-1 overflow-hidden flex-shrink-0">
@@ -263,7 +263,7 @@ const AdminOrders = () => {
                           <div className="relative inline-block w-40">
                             <select
                               value={order.status}
-                              onChange={(e) => updateStatus(order._id, e.target.value)}
+                              onChange={(e) => updateStatus(order.id, e.target.value)}
                               className="w-full text-xs font-bold text-gray-700 bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 cursor-pointer transition"
                             >
                               <option value="succeeded">Succeeded</option>

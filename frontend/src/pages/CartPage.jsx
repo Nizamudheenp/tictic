@@ -106,7 +106,7 @@ const CartPage = () => {
           <div className="lg:col-span-8 space-y-4">
             {cartItems.map((item) => (
               <div
-                key={item.product._id}
+                key={item.product.id}
                 className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-md transition duration-300"
               >
                 {/* Image Frame */}
@@ -135,7 +135,7 @@ const CartPage = () => {
                       </h4>
                     </div>
                     <button
-                      onClick={() => handleRemove(item.product._id)}
+                      onClick={() => handleRemove(item.product.id)}
                       className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition duration-150"
                       aria-label="Remove item"
                     >
@@ -149,7 +149,7 @@ const CartPage = () => {
                     {/* Quantity controls */}
                     <div className="flex items-center border border-gray-200 rounded-full px-2 py-1 bg-gray-50">
                       <button
-                        onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
+                        onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                         className="w-7 h-7 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition"
                       >
@@ -159,7 +159,7 @@ const CartPage = () => {
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => handleQuantityChange(item.product._id, item.quantity + 1)}
+                        onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
                         className="w-7 h-7 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-200 transition"
                       >
                         <FiPlus className="text-xs" />

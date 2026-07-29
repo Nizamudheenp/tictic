@@ -191,7 +191,7 @@ const UserOrders = () => {
                 const badge = getStatusBadge(order.status);
                 return (
                   <motion.div
-                    key={order._id}
+                    key={order.id}
                     variants={cardVariants}
                     className="bg-white border border-gray-100/80 rounded-3xl shadow-sm p-6 hover:shadow-md transition-all duration-300 flex flex-col justify-between text-start"
                   >
@@ -203,7 +203,7 @@ const UserOrders = () => {
                             Order Reference
                           </span>
                           <p className="text-sm font-black text-gray-800 tracking-tight truncate max-w-[180px] sm:max-w-xs">
-                            #{order._id.substring(order._id.length - 8).toUpperCase()}
+                            #{order.id.substring(order.id.length - 8).toUpperCase()}
                           </p>
                         </div>
                         <div

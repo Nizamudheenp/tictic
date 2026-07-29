@@ -78,7 +78,7 @@ const ProductDetails = () => {
     try {
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/products/addToCart`,
-        { productId: product._id, quantity: 1 },
+        { productId: product.id, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       showToast("success", "Added to cart!");
@@ -234,7 +234,7 @@ const ProductDetails = () => {
               <div className="space-y-4">
                 {product.reviews.map((rev) => (
                   <div
-                    key={rev._id}
+                    key={rev.id}
                     className="border border-gray-100 rounded-3xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-300"
                   >
                     <div className="flex items-center justify-between flex-wrap gap-2">

@@ -17,7 +17,7 @@ export const saveOrderToBackend = async ({
       `${import.meta.env.VITE_BACKEND_URL}/api/orders/createorder`,
       {
         products: (cartItems || []).map(item => ({
-          productId: item.product._id,
+          productId: item.product.id,
           quantity: item.quantity,
         }))
         ,

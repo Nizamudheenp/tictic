@@ -217,7 +217,7 @@ const AdminDashboard = () => {
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProducts.map((product) => (
               <div
-                key={product._id}
+                key={product.id}
                 className="bg-white border border-gray-100/80 rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between text-start group"
               >
                 <div>
@@ -287,13 +287,13 @@ const AdminDashboard = () => {
                 {/* Card Actions Panel */}
                 <div className="p-6 pt-0 mt-auto border-t border-gray-50/50 flex gap-3">
                   <button
-                    onClick={() => navigate(`/admin/edit-product/${product._id}`)}
+                    onClick={() => navigate(`/admin/edit-product/${product.id}`)}
                     className="flex-1 flex items-center justify-center gap-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold py-2.5 rounded-xl transition duration-150 text-xs"
                   >
                     <FiEdit size={13} /> Edit
                   </button>
                   <button
-                    onClick={() => deleteProduct(product._id)}
+                    onClick={() => deleteProduct(product.id)}
                     className="flex-1 flex items-center justify-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2.5 rounded-xl transition duration-150 text-xs"
                   >
                     <FiTrash2 size={13} /> Delete
