@@ -4,6 +4,7 @@ import { showToast } from "../utils/toast";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
+import { registerSchema } from "../validators/authValidator";
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -11,17 +12,34 @@ function RegisterPage() {
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Frontend validation
+    const result = registerSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors = {};
+      result.error.issues.forEach(issue => {
+        fieldErrors[issue.path[0]] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
     setIsLoading(true);
+    setErrors({});
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`,
@@ -37,7 +55,15 @@ function RegisterPage() {
         location.reload();
       }, 500);
     } catch (error) {
-      showToast('error', error.response?.data?.message || 'Registration failed');
+      if (error.response?.data?.errors) {
+        const fieldErrors = {};
+        error.response.data.errors.forEach(err => {
+          fieldErrors[err.field] = err.message;
+        });
+        setErrors(fieldErrors);
+      } else {
+        showToast('error', error.response?.data?.message || 'Registration failed');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -109,8 +135,11 @@ function RegisterPage() {
               placeholder="Full Name"
               onChange={handleChange}
               required
-              className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 focus:outline-none transition-all duration-300 bg-white/60 placeholder-gray-400 text-gray-800 text-sm"
+              className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 focus:outline-none transition-all duration-300 bg-white/60 placeholder-gray-400 text-gray-800 text-sm ${
+                errors.name ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'
+              }`}
             />
+            {errors.name && <p className="text-red-500 text-xs mt-1 pl-1">{errors.name}</p>}
           </motion.div>
 
           <motion.div
@@ -128,8 +157,11 @@ function RegisterPage() {
               placeholder="Email Address"
               onChange={handleChange}
               required
-              className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 focus:outline-none transition-all duration-300 bg-white/60 placeholder-gray-400 text-gray-800 text-sm"
+              className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 focus:outline-none transition-all duration-300 bg-white/60 placeholder-gray-400 text-gray-800 text-sm ${
+                errors.email ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'
+              }`}
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1 pl-1">{errors.email}</p>}
           </motion.div>
 
           <motion.div
@@ -147,7 +179,9 @@ function RegisterPage() {
               placeholder="Password"
               onChange={handleChange}
               required
-              className="w-full pl-11 pr-11 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 focus:outline-none transition-all duration-300 bg-white/60 placeholder-gray-400 text-gray-800 text-sm"
+              className={`w-full pl-11 pr-11 py-3 border rounded-xl focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 focus:outline-none transition-all duration-300 bg-white/60 placeholder-gray-400 text-gray-800 text-sm ${
+                errors.password ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'
+              }`}
             />
             <button
               type="button"
@@ -156,6 +190,7 @@ function RegisterPage() {
             >
               {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
             </button>
+            {errors.password && <p className="text-red-500 text-xs mt-1 pl-1">{errors.password}</p>}
           </motion.div>
 
 
