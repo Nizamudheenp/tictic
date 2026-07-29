@@ -3,6 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/AuthRoute");
@@ -10,7 +13,18 @@ const productRoutes = require("./routes/ProductsRoute");
 const orderRoutes = require("./routes/OrderRoute");
 
 const app = express();
-connectDB()
+
+// Register helmet for secure HTTP headers
+app.use(helmet());
+
+connectDB();
+
+// Stricter Rate Limiter for Auth: max 15 requests per 15 mins
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 15,
+  message: { error: "Too many requests , please try again later." }
+});
 
 app.use(cors({
     origin: process.env.FRONTEND_URL,
@@ -20,7 +34,7 @@ app.use(express.json());
 
 const errorHandler = require("./middleware/errorHandler");
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 
