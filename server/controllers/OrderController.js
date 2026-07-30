@@ -58,7 +58,7 @@ exports.getUserOrders = async (req, res) => {
   try {
     const orders = await orderDB
       .find({ userId: req.user.id })
-      .populate('products.productId')
+      .populate('products.productId', 'name price images brand')
       .sort({ createdAt: -1 });
 
     res.json(orders.map(order => new OrderResponseDTO(order)));
@@ -71,7 +71,7 @@ exports.getAllOrders = async (req, res) => {
   try {
     const orders = await orderDB
       .find()
-      .populate('products.productId')
+      .populate('products.productId', 'name price images brand')
       .populate('userId', 'name email')
       .sort({ createdAt: -1 });
 

@@ -27,12 +27,12 @@ const CartPage = () => {
   const handleQuantityChange = async (productId, quantity) => {
     if (quantity < 1) return;
     try {
-      await axios.put(
+      const res = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/products/updateCartItem`,
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      fetchCart();
+      setCartItems(res.data.items || []);
     } catch (err) {
       console.error("Error updating quantity:", err);
       showToast("error", "Error updating quantity");
@@ -41,10 +41,10 @@ const CartPage = () => {
 
   const handleRemove = async (productId) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/removeFromCart/${productId}`, {
+      const res = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/removeFromCart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchCart();
+      setCartItems(res.data.items || []);
       showToast("success", "Item removed from cart");
     } catch (err) {
       console.error("Error removing item:", err);
@@ -74,7 +74,7 @@ const CartPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-24 mt-10">
-      
+
       {/* Title */}
       <div className="max-w-xl text-start mb-10">
         <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-600 bg-primary-50 rounded-lg mb-3">
@@ -101,7 +101,7 @@ const CartPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Cart Items List */}
           <div className="lg:col-span-8 space-y-4">
             {cartItems.map((item) => (
@@ -145,7 +145,7 @@ const CartPage = () => {
 
                   <div className="flex items-center justify-between pt-1">
                     <p className="text-gray-950 font-black text-base">₹{item.product.price}</p>
-                    
+
                     {/* Quantity controls */}
                     <div className="flex items-center border border-gray-200 rounded-full px-2 py-1 bg-gray-50">
                       <button
@@ -174,7 +174,7 @@ const CartPage = () => {
           {/* Cart Summary Card */}
           <div className="lg:col-span-4 bg-white border border-gray-100 rounded-3xl p-6 shadow-md text-start space-y-6">
             <h3 className="text-lg font-bold text-gray-900">Summary</h3>
-            
+
             <div className="space-y-3 text-sm text-gray-500 border-b border-gray-100 pb-4">
               <div className="flex justify-between">
                 <span>Subtotal</span>

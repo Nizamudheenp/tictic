@@ -18,7 +18,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
         <div>
           <img
-            src="public/images/sancart_logo.jpeg"
+            src="images/sancart_logo.jpeg"
             alt="sancart"
             className="w-16 h-16 object-contain mb-4 rounded-lg shadow-sm"
           />
