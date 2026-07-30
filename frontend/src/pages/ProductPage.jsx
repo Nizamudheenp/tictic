@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { showToast } from "../utils/toast";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+import SEO from "../components/SEO";
+import { Helmet } from "react-helmet-async";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -132,8 +134,48 @@ const ProductDetails = () => {
       </h2>
     );
 
+  const productSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.images || [],
+    "description": product.description || `Buy ${product.name} at Sancart.`,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand || 'Sancart'
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": `https://sancart.in/product/${product.id}`,
+      "priceCurrency": "INR",
+      "price": product.price,
+      "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+  };
+
+  if (product.rating > 0 && product.numReviews > 0) {
+    productSchema.aggregateRating = {
+      "@type": "AggregateRating",
+      "ratingValue": product.rating,
+      "reviewCount": product.numReviews
+    };
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-24 mt-10">
+      <SEO 
+        title={product.name} 
+        description={product.description} 
+        image={product.images?.[0]} 
+        url={`/product/${product.id}`} 
+        type="product"
+      />
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(productSchema)}
+        </script>
+      </Helmet>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         
         {/* 1. Image Container (Col 1, Row 1 on Desktop) */}

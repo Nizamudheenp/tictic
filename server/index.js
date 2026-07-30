@@ -33,10 +33,12 @@ app.use(cors({
 app.use(express.json());
 
 const errorHandler = require("./middleware/errorHandler");
+const sitemapRoutes = require("./routes/SitemapRoute");
 
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/', sitemapRoutes); // Expose sitemap.xml
 
 // Register global error handler
 app.use(errorHandler);

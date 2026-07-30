@@ -8,10 +8,12 @@ import ProductCollection from '../components/ProductCollection'
 import TrustBadges from '../components/TrustBadges'
 import CategoryShowcase from '../components/CategoryShowcase'
 import Testimonials from '../components/Testimonials'
+import SEO from '../components/SEO'
 
 function Home() {
   return (
     <div className="pt-20">
+      <SEO />
       <Hero />
       <TrustBadges />
       <CategoryShowcase />

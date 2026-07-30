@@ -6,6 +6,8 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { showToast } from '../utils/toast';
 import { motion } from 'framer-motion';
 
+import SEO from '../components/SEO';
+
 const ProductCard = ({ product, onClick }) => {
   const navigate = useNavigate();
 
@@ -135,6 +137,7 @@ const Shop = () => {
 
   return (
     <section id="Product-1" className="max-w-[1300px] mx-auto px-6 py-24">
+      <SEO title="Shop Trending Collections" description="Explore sancart trending and hot dropshipping items with premium quality." url="/shop" />
       <div className="max-w-xl text-start mb-10">
         <h2 className="text-3xl md:text-5xl font-black text-gray-950 tracking-tight">
           Trending Shop
