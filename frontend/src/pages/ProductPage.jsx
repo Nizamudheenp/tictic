@@ -121,12 +121,14 @@ const ProductDetails = () => {
     return stars;
   };
 
-  if (loading)
+  if (loading) {
     return (
-      <h2 className="text-center text-lg font-medium text-primary-600 mt-32 animate-pulse">
-        Loading product details...
-      </h2>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-white gap-4">
+        <span className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm font-semibold text-gray-500">Loading product details...</p>
+      </div>
     );
+  }
   if (!product)
     return (
       <h2 className="text-center text-lg font-medium text-red-500 mt-32">

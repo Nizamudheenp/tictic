@@ -65,12 +65,14 @@ const CartPage = () => {
     fetchCart();
   }, []);
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="text-center py-32 text-lg font-medium text-primary-600 animate-pulse">
-        Loading cart items...
+      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-white gap-4">
+        <span className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm font-semibold text-gray-500">Loading cart items...</p>
       </div>
     );
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-24 mt-10">

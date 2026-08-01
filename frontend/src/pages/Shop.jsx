@@ -128,11 +128,10 @@ const Shop = () => {
 
   if (loading) {
     return (
-      <section className="px-6 py-10 mt-16">
-        <h2 className="text-center text-lg text-primary-600 font-medium animate-pulse">
-          Loading products...
-        </h2>
-      </section>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-white gap-4">
+        <span className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm font-semibold text-gray-500">Loading products...</p>
+      </div>
     );
   }
 
