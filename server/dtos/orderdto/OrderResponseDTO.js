@@ -31,6 +31,7 @@ class OrderResponseDTO {
     this.shippingAddress = order.shippingAddress;
     this.paymentIntentId = order.paymentIntentId;
     this.status = order.status;
+    this.guestEmail = order.guestEmail;
     this.createdAt = order.createdAt;
   }
 }

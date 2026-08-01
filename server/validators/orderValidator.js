@@ -13,6 +13,7 @@ const createOrderSchema = z.object({
   shippingAddress: z.string().trim().min(1, 'Shipping address is required'),
   paymentIntentId: z.string().trim().min(1, 'Payment intent ID is required'),
   status: z.enum(["processing", "shipped", "paid", "delivered", "cancelled"]).default("processing"),
+  guestEmail: z.string().trim().email('Invalid email format').optional().or(z.literal('')),
 });
 
 const updateOrderStatusSchema = z.object({

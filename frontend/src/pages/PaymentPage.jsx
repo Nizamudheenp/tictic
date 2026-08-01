@@ -9,9 +9,10 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { saveOrderToBackend } from "../utils/saveOrder";
+import { clearGuestCart } from "../utils/guestCart";
 import { showToast } from "../utils/toast";
 import { motion } from "framer-motion";
-import { FiMapPin, FiCreditCard, FiArrowRight, FiShoppingBag, FiInfo } from "react-icons/fi";
+import { FiMapPin, FiCreditCard, FiArrowRight, FiShoppingBag, FiInfo, FiMail } from "react-icons/fi";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -21,6 +22,7 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [shippingAddress, setShippingAddress] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +37,10 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
     if (!stripe || !elements) return;
     if (!shippingAddress) {
       showToast('error', 'Please provide a shipping address');
+      return;
+    }
+    if (!userToken && !guestEmail) {
+      showToast('error', 'Please provide an email address');
       return;
     }
     setLoading(true);
@@ -58,11 +64,17 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
           userAddress: shippingAddress,
           paymentIntent,
           userToken,
+          guestEmail: userToken ? undefined : guestEmail,
         });
         navigate("/payment-success");
-        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/clearCart`, {
-          headers: { Authorization: `Bearer ${userToken}` },
-        });
+
+        if (userToken && userToken !== "null" && userToken !== "undefined") {
+          await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/clearCart`, {
+            headers: { Authorization: `Bearer ${userToken}` },
+          });
+        } else {
+          clearGuestCart();
+        }
       }
     } catch (error) {
       console.error("Error during payment or saving order:", error.message);
@@ -102,6 +114,23 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
               <span className="text-sm text-gray-500 font-medium">Grand Total</span>
               <strong className="text-xl font-black text-primary-600">₹{amount}</strong>
             </div>
+
+            {/* Guest Email field */}
+            {(!userToken || userToken === "null" || userToken === "undefined") && (
+              <div className="space-y-2 mb-6">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-wide">
+                  <FiMail /> Contact Email
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  placeholder="Enter your contact email..."
+                  className="w-full border border-gray-200 rounded-2xl p-3.5 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all text-sm text-gray-800 placeholder-gray-400"
+                />
+              </div>
+            )}
 
             {/* Shipping Address field */}
             <div className="space-y-2 mb-6">

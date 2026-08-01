@@ -5,6 +5,7 @@ class CreateOrderRequestDTO {
     this.shippingAddress = body.shippingAddress ? body.shippingAddress.trim() : null;
     this.paymentIntentId = body.paymentIntentId;
     this.status = body.status;
+    this.guestEmail = body.guestEmail ? body.guestEmail.trim() : null;
   }
 }
 

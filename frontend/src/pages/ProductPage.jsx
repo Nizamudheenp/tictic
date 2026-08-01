@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { showToast } from "../utils/toast";
+import { addToGuestCart } from "../utils/guestCart";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import SEO from "../components/SEO";
 import { Helmet } from "react-helmet-async";
@@ -71,10 +72,8 @@ const ProductDetails = () => {
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      showToast("error", "Please login to add items to your cart");
-      setTimeout(() => {
-        navigate("/login");
-      }, 800);
+      addToGuestCart(product, 1);
+      showToast("success", "Added to cart!");
       return;
     }
     try {
@@ -110,9 +109,8 @@ const ProductDetails = () => {
           onClick={() => {
             if (interactive) setRating(i);
           }}
-          className={`text-amber-400 text-lg ${
-            interactive ? "cursor-pointer hover:scale-110 transition duration-150" : ""
-          }`}
+          className={`text-amber-400 text-lg ${interactive ? "cursor-pointer hover:scale-110 transition duration-150" : ""
+            }`}
         >
           {icon}
         </span>
@@ -166,11 +164,11 @@ const ProductDetails = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-24 mt-10">
-      <SEO 
-        title={product.name} 
-        description={product.description} 
-        image={product.images?.[0]} 
-        url={`/product/${product.id}`} 
+      <SEO
+        title={product.name}
+        description={product.description}
+        image={product.images?.[0]}
+        url={`/product/${product.id}`}
         type="product"
       />
       <Helmet>
@@ -179,7 +177,7 @@ const ProductDetails = () => {
         </script>
       </Helmet>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-        
+
         {/* 1. Image Container (Col 1, Row 1 on Desktop) */}
         <div className="lg:col-start-1 lg:row-start-1 w-full flex justify-center bg-slate-50 rounded-3xl p-8 border border-gray-100 shadow-sm h-[320px] sm:h-[450px] md:h-[500px] flex items-center justify-center overflow-hidden">
           <img
@@ -237,7 +235,7 @@ const ProductDetails = () => {
 
         {/* 3. Review Column (Col 1, Row 2 on Desktop - stacks below image on desktop, below details on mobile) */}
         <div className="lg:col-start-1 lg:row-start-2 w-full flex flex-col gap-8">
-          
+
           {/* Review Write section */}
           {user && (
             <div className="pt-6 border-t border-gray-100 text-start w-full">

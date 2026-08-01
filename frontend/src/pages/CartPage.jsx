@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../utils/toast";
+import { getGuestCart, updateGuestCartQuantity, removeFromGuestCart } from "../utils/guestCart";
 import { FiTrash2, FiShoppingCart, FiMinus, FiPlus } from "react-icons/fi";
 
 const CartPage = () => {
@@ -12,6 +13,11 @@ const CartPage = () => {
   const token = localStorage.getItem("token");
 
   const fetchCart = async () => {
+    if (!token) {
+      setCartItems(getGuestCart());
+      setLoading(false);
+      return;
+    }
     try {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/getCart`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -26,6 +32,11 @@ const CartPage = () => {
 
   const handleQuantityChange = async (productId, quantity) => {
     if (quantity < 1) return;
+    if (!token) {
+      const updatedCart = updateGuestCartQuantity(productId, quantity);
+      setCartItems(updatedCart);
+      return;
+    }
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/products/updateCartItem`,
@@ -40,6 +51,12 @@ const CartPage = () => {
   };
 
   const handleRemove = async (productId) => {
+    if (!token) {
+      const updatedCart = removeFromGuestCart(productId);
+      setCartItems(updatedCart);
+      showToast("success", "Item removed from cart");
+      return;
+    }
     try {
       const res = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/removeFromCart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },

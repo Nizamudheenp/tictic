@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar, AiTwotoneStar } from 'react-icons/ai';
 import { FiShoppingCart } from 'react-icons/fi';
 import { showToast } from '../utils/toast';
+import { addToGuestCart } from '../utils/guestCart';
 import { motion } from 'framer-motion';
 
 const ProductCard = ({ product, onClick }) => {
@@ -27,10 +28,8 @@ const ProductCard = ({ product, onClick }) => {
     e.stopPropagation();
     const token = localStorage.getItem("token");
     if (!token) {
-      showToast("error", "Please login to add items to your cart");
-      setTimeout(() => {
-        navigate("/login");
-      }, 800);
+      addToGuestCart(product, 1);
+      showToast("success", "Added to cart!");
       return;
     }
     try {
@@ -89,7 +88,7 @@ const ProductCard = ({ product, onClick }) => {
       <div className="px-1 pt-3 border-t border-gray-50 mt-4 flex flex-col text-start">
         <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Price</span>
         <h4 className="text-lg font-black text-gray-950 leading-none mt-1">₹{product.price}</h4>
-        
+
         <button
           onClick={handleAddToCart}
           className="w-full mt-3.5 flex items-center justify-center gap-2 py-3 text-xs font-bold rounded-xl text-white bg-gradient-to-r from-primary-500 to-yellow-400 hover:shadow-md active:scale-95 transition-all duration-200"

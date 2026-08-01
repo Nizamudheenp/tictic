@@ -12,6 +12,21 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+const verifyOptionalToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return next();
+
+  const token = authHeader.split(' ')[1];
+  if (!token || token === 'null' || token === 'undefined') return next();
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (!err) {
+      req.user = decoded;
+    }
+    next();
+  });
+};
+
 const verifyAdmin = (req, res, next) => {
     if (!req.user?.isAdmin) {
       return res.status(403).json({ message: 'Admin access required' });
@@ -19,4 +34,4 @@ const verifyAdmin = (req, res, next) => {
     next();
   };
 
-module.exports = { verifyToken, verifyAdmin };
+module.exports = { verifyToken, verifyAdmin, verifyOptionalToken };

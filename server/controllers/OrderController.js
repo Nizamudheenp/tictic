@@ -16,7 +16,8 @@ exports.createOrder = async (req, res) => {
     }
 
     const order = new orderDB({
-      userId: req.user.id,
+      userId: req.user ? req.user.id : undefined,
+      guestEmail: req.user ? undefined : orderReq.guestEmail,
       products: orderReq.products,
       totalAmount: orderReq.totalAmount,
       shippingAddress: orderReq.shippingAddress,

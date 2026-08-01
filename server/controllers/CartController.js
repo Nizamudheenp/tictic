@@ -62,3 +62,32 @@ exports.clearCart = async (req, res) => {
   }
   res.json({ message: "Cart cleared" });
 };
+
+exports.syncCart = async (req, res) => {
+  try {
+    const { items } = req.body;
+    if (!items || !Array.isArray(items)) {
+      return res.status(400).json({ message: "Invalid items format" });
+    }
+
+    let cart = await CartDB.findOne({ user: req.user.id });
+    if (!cart) cart = new CartDB({ user: req.user.id, items: [] });
+
+    for (const guestItem of items) {
+      if (!guestItem.productId) continue;
+      const existing = cart.items.find(item => item.product.toString() === guestItem.productId);
+      if (existing) {
+        existing.quantity += guestItem.quantity;
+      } else {
+        cart.items.push({ product: guestItem.productId, quantity: guestItem.quantity });
+      }
+    }
+
+    await cart.save();
+    const populatedCart = await cart.populate("items.product");
+    res.json(new CartResponseDTO(populatedCart));
+  } catch (err) {
+    console.error("Error syncing cart:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

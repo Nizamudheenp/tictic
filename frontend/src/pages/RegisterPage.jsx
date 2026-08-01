@@ -49,6 +49,26 @@ function RegisterPage() {
       const user = response.data.user;
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', token);
+
+      // Sync guest cart
+      try {
+        const guestCart = JSON.parse(localStorage.getItem("guest_cart") || "[]");
+        if (guestCart.length > 0) {
+          const items = guestCart.map(item => ({
+            productId: item.product.id || item.product._id,
+            quantity: item.quantity
+          }));
+          await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/api/products/syncCart`,
+            { items },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          localStorage.removeItem("guest_cart");
+        }
+      } catch (syncErr) {
+        console.error("Error syncing cart on register:", syncErr);
+      }
+
       showToast('success', 'Registration successful');
       setTimeout(() => {
         navigate('/');

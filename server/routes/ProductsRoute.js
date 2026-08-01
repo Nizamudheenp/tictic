@@ -3,7 +3,7 @@ const { getProducts, createProduct, getProductById, updateProduct, deleteProduct
 const { verifyAdmin } = require('../middleware/AuthMiddleware.js');
 const { verifyToken } = require('../middleware/AuthMiddleware.js');
 const upload = require('../middleware/uploadMiddleware.js');
-const { getCart, addToCart, updateCartItem, removeFromCart, clearCart } = require('../controllers/CartController.js');
+const { getCart, addToCart, updateCartItem, removeFromCart, clearCart, syncCart } = require('../controllers/CartController.js');
 const validate = require('../middleware/validate');
 const { createProductSchema, updateProductSchema, addReviewSchema } = require('../validators/productValidator');
 const { cartItemSchema } = require('../validators/cartValidator');
@@ -22,5 +22,6 @@ router.post("/addToCart", verifyToken, validate(cartItemSchema), addToCart);
 router.put("/updateCartItem", verifyToken, validate(cartItemSchema), updateCartItem);
 router.delete("/removeFromCart/:productId", verifyToken, removeFromCart);
 router.delete("/clearCart", verifyToken, clearCart);
+router.post("/syncCart", verifyToken, syncCart);
 
 module.exports = router;
