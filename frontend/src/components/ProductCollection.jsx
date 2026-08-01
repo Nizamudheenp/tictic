@@ -49,7 +49,7 @@ const ProductCard = ({ product, onClick }) => {
   return (
     <motion.div
       onClick={onClick}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer p-3"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-gray-100 bg-white p-4 shadow-sm hover:shadow-[0_15px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.5 }}
@@ -57,41 +57,42 @@ const ProductCard = ({ product, onClick }) => {
     >
       <div>
         {/* Constrained Height Image Container */}
-        <div className="relative overflow-hidden h-48 w-full bg-slate-50 rounded-2xl p-4 flex items-center justify-center">
+        <div className="relative overflow-hidden h-48 w-full bg-slate-50/70 rounded-2xl p-4 flex items-center justify-center transition-colors duration-300 group-hover:bg-slate-50">
           <img
             src={product.images?.[0] || '/placeholder.jpg'}
             alt={product.name}
-            className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+            className="max-w-[85%] max-h-[85%] object-contain transform group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
               e.target.src = "/placeholder.jpg";
             }}
           />
           {product.brand && (
-            <span className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-600 bg-white/95 rounded-md shadow-sm">
+            <span className="absolute top-3 left-3 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-primary-600 bg-white/95 rounded-md shadow-sm border border-gray-100/50">
               {product.brand}
             </span>
           )}
         </div>
 
         {/* Text details */}
-        <div className="px-2 pt-4 pb-1 text-start">
-          <h5 className="text-gray-900 font-bold text-sm leading-snug group-hover:text-primary-500 transition-colors truncate">
+        <div className="px-1 pt-4 pb-1 text-start">
+          <h5 className="text-gray-900 font-extrabold text-sm leading-snug group-hover:text-primary-500 transition-colors truncate">
             {product.name}
           </h5>
-          <div className="flex items-center gap-1 mt-1">
+          <div className="flex items-center gap-1.5 mt-1.5">
             <div className="flex text-xs">{renderStars()}</div>
-            <span className="text-gray-400 text-[10px] font-semibold">({product.numReviews || 0})</span>
+            <span className="text-gray-400 text-[10px] font-bold">({product.numReviews || 0})</span>
           </div>
         </div>
       </div>
 
       {/* Card bottom section with Add To Cart button as a block */}
-      <div className="px-2 pt-3 pb-1 border-t border-gray-50 mt-3 flex flex-col gap-2">
-        <h4 className="text-base font-black text-gray-950 text-start">₹{product.price}</h4>
+      <div className="px-1 pt-3 border-t border-gray-50 mt-4 flex flex-col text-start">
+        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Price</span>
+        <h4 className="text-lg font-black text-gray-950 leading-none mt-1">₹{product.price}</h4>
         
         <button
           onClick={handleAddToCart}
-          className="w-[60%] mx-auto flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold rounded-full text-white bg-gradient-to-r from-primary-500 to-yellow-400 hover:shadow-md transition-all active:scale-95"
+          className="w-full mt-3.5 flex items-center justify-center gap-2 py-3 text-xs font-bold rounded-xl text-white bg-gradient-to-r from-primary-500 to-yellow-400 hover:shadow-md active:scale-95 transition-all duration-200"
         >
           <FiShoppingCart className="text-sm" />
           <span>Add to Cart</span>
