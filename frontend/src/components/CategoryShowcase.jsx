@@ -15,7 +15,7 @@ const CategoryShowcase = () => {
     {
       name: "Creative Living",
       tag: "New Arrivals",
-      image: "/images/cat-lifestyle.jpg",
+      image: "/images/cat-lifestyle.png",
       link: "/shop?category=lifestyle",
       cols: "col-span-1",
     },
@@ -29,7 +29,7 @@ const CategoryShowcase = () => {
     {
       name: "Innovative Kitchen",
       tag: "Staff Pick",
-      image: "/images/cat-kitchen.jpg",
+      image: "/images/cat-kitchen.png",
       link: "/shop?category=kitchen",
       cols: "col-span-1 md:col-span-2",
     },
