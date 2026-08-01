@@ -13,7 +13,6 @@ import {
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState("");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -34,11 +33,9 @@ const Contact = () => {
         form,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setStatus("Message sent successfully!");
       setForm({ name: "", email: "", message: "" });
       showToast("success", "Message sent successfully!");
     } catch (error) {
-      setStatus("Failed to send message.");
       showToast("error", "Failed to send message.");
     }
   };
@@ -107,15 +104,6 @@ const Contact = () => {
 
         {/* Right Column: Contact Message Form */}
         <div className="lg:col-span-7 bg-white p-8 rounded-3xl border border-gray-100 shadow-lg">
-          {status && (
-            <p
-              className={`text-center font-bold text-sm mb-4 p-3 rounded-xl ${
-                status.includes("successfully") ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
-              }`}
-            >
-              {status}
-            </p>
-          )}
           <h3 className="text-xl font-bold text-gray-950 mb-6 text-start">
             Send Us a Message
           </h3>
