@@ -16,10 +16,11 @@ function Home() {
       <SEO />
       <Hero />
       <TrustBadges />
+      <ProductCollection title="Trending Products" tag="Trending Product" limit={8} />
       <CategoryShowcase />
-      <ProductCollection title="Featured Products" tag="Top Brand" limit={8} />
+      <ProductCollection title="Featured Products" tag="Featured" limit={8} />
       <Banner />
-      <ProductCollection title="Trending Collections" tag="Interested In" limit={8} />
+      <ProductCollection title="Trending Collections" tag="New Arrival" limit={8} />
       <SmallBanner />
       <SmallBanner2 />
       <Testimonials />

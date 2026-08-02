@@ -6,6 +6,7 @@ import { addToGuestCart } from "../utils/guestCart";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import SEO from "../components/SEO";
 import { Helmet } from "react-helmet-async";
+import ProductCollection from "../components/ProductCollection";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -293,6 +294,18 @@ const ProductDetails = () => {
         </div>
 
       </div>
+
+      {/* Recommended Products (Users also like) */}
+      {product.category && (
+        <div className="border-t border-gray-100 mt-16 pt-12 text-start">
+          <ProductCollection
+            title="You May Also Like"
+            tag="Recommendations"
+            category={product.category}
+            limit={4}
+          />
+        </div>
+      )}
     </div>
   );
 };

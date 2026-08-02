@@ -30,7 +30,7 @@ const AdminDashboard = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/getproducts`);
-      setProducts(response.data || []);
+      setProducts(response.data.products || response.data || []);
     } catch (error) {
       console.error("Error fetching products", error);
     } finally {

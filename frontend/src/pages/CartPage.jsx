@@ -13,8 +13,9 @@ const CartPage = () => {
   const token = localStorage.getItem("token");
 
   const fetchCart = async () => {
-    if (!token) {
-      setCartItems(getGuestCart());
+    if (!token || token === "null" || token === "undefined") {
+      const guestItems = getGuestCart().filter(item => item && item.product);
+      setCartItems(guestItems);
       setLoading(false);
       return;
     }
@@ -22,7 +23,8 @@ const CartPage = () => {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/getCart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCartItems(res.data.items || []);
+      const validItems = (res.data.items || []).filter(item => item && item.product);
+      setCartItems(validItems);
     } catch (err) {
       console.error("Error fetching cart:", err);
     } finally {
@@ -32,9 +34,9 @@ const CartPage = () => {
 
   const handleQuantityChange = async (productId, quantity) => {
     if (quantity < 1) return;
-    if (!token) {
+    if (!token || token === "null" || token === "undefined") {
       const updatedCart = updateGuestCartQuantity(productId, quantity);
-      setCartItems(updatedCart);
+      setCartItems(updatedCart.filter(item => item && item.product));
       return;
     }
     try {
@@ -43,7 +45,8 @@ const CartPage = () => {
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setCartItems(res.data.items || []);
+      const validItems = (res.data.items || []).filter(item => item && item.product);
+      setCartItems(validItems);
     } catch (err) {
       console.error("Error updating quantity:", err);
       showToast("error", "Error updating quantity");
@@ -51,9 +54,9 @@ const CartPage = () => {
   };
 
   const handleRemove = async (productId) => {
-    if (!token) {
+    if (!token || token === "null" || token === "undefined") {
       const updatedCart = removeFromGuestCart(productId);
-      setCartItems(updatedCart);
+      setCartItems(updatedCart.filter(item => item && item.product));
       showToast("success", "Item removed from cart");
       return;
     }
@@ -61,7 +64,8 @@ const CartPage = () => {
       const res = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/removeFromCart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCartItems(res.data.items || []);
+      const validItems = (res.data.items || []).filter(item => item && item.product);
+      setCartItems(validItems);
       showToast("success", "Item removed from cart");
     } catch (err) {
       console.error("Error removing item:", err);
@@ -70,12 +74,13 @@ const CartPage = () => {
   };
 
   const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
+    (acc, item) => acc + (item.product?.price || 0) * item.quantity,
     0
   );
 
   const handleCheckout = () => {
-    navigate("/checkout", { state: { amount: totalPrice, cartItems, token } });
+    const cleanToken = (token === "null" || token === "undefined") ? null : token;
+    navigate("/checkout", { state: { amount: totalPrice, cartItems, token: cleanToken } });
   };
 
   useEffect(() => {

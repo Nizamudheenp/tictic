@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 const SmallBanner = () => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/shop");
+  const handleExploreTech = () => {
+    navigate("/shop?category=gadgets");
+  };
+
+  const handleShopHome = () => {
+    navigate("/shop?category=lifestyle");
   };
 
   return (
@@ -30,7 +34,7 @@ const SmallBanner = () => {
           </p>
           <button
             className="bg-white text-gray-900 font-bold px-6 py-3 rounded-xl hover:bg-gray-100 transition-colors shadow-md active:scale-95 transform duration-150"
-            onClick={handleClick}
+            onClick={handleExploreTech}
           >
             Explore Tech
           </button>
@@ -54,7 +58,7 @@ const SmallBanner = () => {
           </p>
           <button
             className="bg-white text-gray-900 font-bold px-6 py-3 rounded-xl hover:bg-gray-100 transition-colors shadow-md active:scale-95 transform duration-150"
-            onClick={handleClick}
+            onClick={handleShopHome}
           >
             Shop Home
           </button>

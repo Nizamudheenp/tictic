@@ -3,10 +3,21 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { showToast } from "../utils/toast";
 
+const CATEGORY_OPTIONS = [
+  { value: 'gadgets', label: 'Trending Gadgets' },
+  { value: 'lifestyle', label: 'Creative Living' },
+  { value: 'fitness', label: 'Smart Health & Fitness' },
+  { value: 'kitchen', label: 'Innovative Kitchen' },
+  { value: 'accessories', label: 'Hot Accessories' }
+];
+
 const TAG_OPTIONS = [
-  'New Arrival', 'Special Price', 'Top Brand', 'Best Seller',
-  'Limited Edition', 'Top Discount Of The Sale', 'Popular',
-  'Sponsored', 'Interested In', 'Featured', 'Top Deal'
+  { value: 'New Arrival', label: 'New Arrival (Latest Drops)' },
+  { value: 'Special Price', label: 'Special Price (Sale Discount)' },
+  { value: 'Top Brand', label: 'Top Brand (Premium Label)' },
+  { value: 'Best Seller', label: 'Best Seller (Most Ordered)' },
+  { value: 'Featured', label: 'Featured Product (Main Grid)' },
+  { value: 'Trending Product', label: 'Trending Product (Hot Seller)' },
 ];
 
 const EditProduct = () => {
@@ -116,14 +127,17 @@ const EditProduct = () => {
 
           <div>
             <label className="block mb-1 font-semibold text-gray-700">Category</label>
-            <input
-              type="text"
+            <select
               name="category"
               value={product.category}
               onChange={handleInputChange}
               required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            >
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -138,18 +152,28 @@ const EditProduct = () => {
           </div>
 
           <div>
-            <label className="block mb-1 font-semibold text-gray-700">Tags</label>
-            <select
-              multiple
-              value={product.tags}
-              onChange={handleTagsChange}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              {TAG_OPTIONS.map((tag) => (
-                <option key={tag} value={tag}>{tag}</option>
+            <label className="block mb-1 font-semibold text-gray-700">Product Collections (Tags)</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 border border-gray-200 rounded-lg">
+              {TAG_OPTIONS.map((t) => (
+                <label key={t.value} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={product.tags?.includes(t.value)}
+                    onChange={(e) => {
+                      let updatedTags = [...(product.tags || [])];
+                      if (e.target.checked) {
+                        updatedTags.push(t.value);
+                      } else {
+                        updatedTags = updatedTags.filter(item => item !== t.value);
+                      }
+                      setProduct({ ...product, tags: updatedTags });
+                    }}
+                    className="rounded text-blue-500 focus:ring-blue-400"
+                  />
+                  <span>{t.label}</span>
+                </label>
               ))}
-            </select>
-            <small className="text-gray-500">Select multiple tags by holding Ctrl (or Cmd) key</small>
+            </div>
           </div>
 
           <div>

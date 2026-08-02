@@ -3,17 +3,28 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { showToast } from "../utils/toast";
 
+const CATEGORY_OPTIONS = [
+  { value: 'gadgets', label: 'Trending Gadgets' },
+  { value: 'lifestyle', label: 'Creative Living' },
+  { value: 'fitness', label: 'Smart Health & Fitness' },
+  { value: 'kitchen', label: 'Innovative Kitchen' },
+  { value: 'accessories', label: 'Hot Accessories' }
+];
+
 const TAG_OPTIONS = [
-  'New Arrival', 'Special Price', 'Top Brand', 'Best Seller',
-  'Limited Edition', 'Top Discount Of The Sale', 'Popular',
-  'Sponsored', 'Interested In', 'Featured', 'Top Deal'
+  { value: 'New Arrival', label: 'New Arrival (Latest Drops)' },
+  { value: 'Special Price', label: 'Special Price (Sale Discount)' },
+  { value: 'Top Brand', label: 'Top Brand (Premium Label)' },
+  { value: 'Best Seller', label: 'Best Seller (Most Ordered)' },
+  { value: 'Featured', label: 'Featured Product (Main Grid)' },
+  { value: 'Trending Product', label: 'Trending Product (Hot Seller)' },
 ];
 
 const AddProduct = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('gadgets');
   const [brand, setBrand] = useState('');
   const [tags, setTags] = useState([]);
   const [images, setImages] = useState([]);
@@ -83,14 +94,19 @@ const AddProduct = () => {
           required
           className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <input
-          type="text"
-          placeholder="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          required
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+        <div className="text-start space-y-1.5">
+          <label className="block text-sm font-semibold text-gray-700">Category</label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+          >
+            {CATEGORY_OPTIONS.map((c) => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+          </select>
+        </div>
         <input
           type="text"
           placeholder="Brand"
@@ -98,16 +114,28 @@ const AddProduct = () => {
           onChange={(e) => setBrand(e.target.value)}
           className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <select
-          multiple
-          value={tags}
-          onChange={(e) => setTags(Array.from(e.target.selectedOptions, option => option.value))}
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          {TAG_OPTIONS.map(tag => (
-            <option key={tag} value={tag}>{tag}</option>
-          ))}
-        </select>
+        <div className="text-start space-y-2">
+          <label className="block text-sm font-semibold text-gray-700">Product Collections (Tags)</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 border border-gray-200 rounded-lg">
+            {TAG_OPTIONS.map((t) => (
+              <label key={t.value} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={tags.includes(t.value)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setTags([...tags, t.value]);
+                    } else {
+                      setTags(tags.filter((item) => item !== t.value));
+                    }
+                  }}
+                  className="rounded text-blue-500 focus:ring-blue-400"
+                />
+                <span>{t.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
         <input
           type="file"
           multiple

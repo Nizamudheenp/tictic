@@ -117,7 +117,7 @@ const ProductCollection = ({ title, tag, category, search, limit }) => {
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/products/getproducts?${queryParams.toString()}`
         );
-        setProducts(res.data);
+        setProducts(res.data.products || res.data);
       } catch (err) {
         console.error('Error fetching products:', err);
       }

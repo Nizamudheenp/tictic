@@ -8,24 +8,35 @@ const mongoose = require('mongoose')
 
 exports.getProducts = async (req, res) => {
   try {
-    const { category, tag, search, limit } = req.query;
+    const { category, tag, search, limit, page, sort } = req.query;
 
     let filter = {};
-    if (category) filter.category = category;
+    if (category && category !== 'all') filter.category = category;
     if (tag) filter.tags = tag;
     if (search) filter.name = { $regex: search, $options: 'i' };
 
-    let query = ProductDB.find(filter).sort({ createdAt: -1 });
+    let sortOption = { createdAt: -1 }; // default newest
+    if (sort === 'price_asc') sortOption = { price: 1 };
+    if (sort === 'price_desc') sortOption = { price: -1 };
+    if (sort === 'rating_desc') sortOption = { rating: -1 };
 
-    if (limit) {
-      const numericLimit = parseInt(limit);
-      if (!isNaN(numericLimit)) {
-        query = query.limit(numericLimit);
-      }
-    }
+    let query = ProductDB.find(filter).sort(sortOption);
+
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 12;
+    const skipNum = (pageNum - 1) * limitNum;
+
+    query = query.skip(skipNum).limit(limitNum);
 
     const products = await query.exec();
-    res.json(products.map(product => new ProductResponseDTO(product)));
+    const totalCount = await ProductDB.countDocuments(filter);
+
+    res.json({
+      products: products.map(product => new ProductResponseDTO(product)),
+      totalCount,
+      page: pageNum,
+      totalPages: Math.ceil(totalCount / limitNum)
+    });
   } catch (err) {
     console.error('Error fetching products:', err);
     res.status(500).json({ error: 'Server error' });
