@@ -56,12 +56,13 @@ const AdminOrders = () => {
   }, []);
 
   const getStatusBadge = (status) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case "delivered":
         return {
           bg: "bg-emerald-50 text-emerald-700 border-emerald-100",
           icon: <FiCheckCircle className="text-emerald-500" />,
         };
+      case "pending":
       case "processing":
         return {
           bg: "bg-amber-50 text-amber-700 border-amber-100",
@@ -72,6 +73,7 @@ const AdminOrders = () => {
           bg: "bg-blue-50 text-blue-700 border-blue-100",
           icon: <FiTruck className="text-blue-500" />,
         };
+      case "paid":
       case "succeeded":
         return {
           bg: "bg-indigo-50 text-indigo-700 border-indigo-100",
@@ -199,11 +201,11 @@ const AdminOrders = () => {
                         <td className="px-6 py-5 whitespace-nowrap">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-full bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-600 font-bold text-sm">
-                              {order.userId?.name ? order.userId.name.charAt(0).toUpperCase() : <FiUser />}
+                              {order.user?.name ? order.user.name.charAt(0).toUpperCase() : <FiUser />}
                             </div>
                             <div className="text-start">
                               <p className="font-bold text-gray-800 text-sm">
-                                {order.userId?.name || "Anonymous User"}
+                                {order.user?.name || "Anonymous User"}
                               </p>
                               <p className="text-[10px] text-gray-400 font-medium tracking-tight">
                                 ID: #{order.id.substring(order.id.length - 8).toUpperCase()}
@@ -217,13 +219,13 @@ const AdminOrders = () => {
                           <div className="space-y-2 text-start">
                             {order.products.map((p, index) => (
                               <div
-                                key={`${p.productId?.id || "no-id"}-${index}`}
+                                key={`${p.product?.id || "no-id"}-${index}`}
                                 className="flex items-center gap-2"
                               >
                                 <div className="w-8 h-8 border border-gray-100 bg-white rounded-lg flex items-center justify-center p-1 overflow-hidden flex-shrink-0">
                                   <img
-                                    src={p.productId?.images?.[0] || "/placeholder.svg"}
-                                    alt={p.productId?.name}
+                                    src={p.product?.images?.[0] || "/placeholder.svg"}
+                                    alt={p.product?.name}
                                     className="max-w-full max-h-full object-contain"
                                     onError={(e) => {
                                       e.target.src = "/placeholder.svg";
@@ -231,7 +233,7 @@ const AdminOrders = () => {
                                   />
                                 </div>
                                 <span className="text-xs font-semibold text-gray-700 truncate max-w-[200px]">
-                                  {p.productId?.name || "Product Item"}
+                                  {p.product?.name || "Product Item"}
                                 </span>
                                 <span className="text-[10px] text-gray-400 font-bold bg-slate-100/80 px-1.5 py-0.5 rounded-md">
                                   ×{p.quantity}
@@ -266,7 +268,7 @@ const AdminOrders = () => {
                               onChange={(e) => updateStatus(order.id, e.target.value)}
                               className="w-full text-xs font-bold text-gray-700 bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 cursor-pointer transition"
                             >
-                              <option value="succeeded">Succeeded</option>
+                              <option value="paid">Paid</option>
                               <option value="processing">Processing</option>
                               <option value="shipped">Shipped</option>
                               <option value="delivered">Delivered</option>

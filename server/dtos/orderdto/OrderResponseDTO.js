@@ -29,7 +29,7 @@ class OrderResponseDTO {
 
     this.totalAmount = order.totalAmount;
     this.shippingAddress = order.shippingAddress;
-    this.paymentIntentId = order.paymentIntentId;
+    this.paymentId = order.paymentId;
     this.status = order.status;
     this.guestEmail = order.guestEmail;
     this.createdAt = order.createdAt;

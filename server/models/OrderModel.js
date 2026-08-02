@@ -11,7 +11,7 @@ const OrderSchema = new mongoose.Schema({
   ],
   totalAmount: { type: Number, required: true },
   shippingAddress: { type: String, required: true },
-  paymentIntentId: { type: String, required: true },
+  paymentId: { type: String, required: true },
   status: {
     type: String,
     enum: ["processing", "shipped", "paid", "delivered", "cancelled"],

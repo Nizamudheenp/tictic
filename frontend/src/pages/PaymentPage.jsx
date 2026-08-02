@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  useStripe,
-  useElements,
-  PaymentElement,
-} from "@stripe/react-stripe-js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { saveOrderToBackend } from "../utils/saveOrder";
 import { clearGuestCart } from "../utils/guestCart";
 import { showToast } from "../utils/toast";
 import { motion } from "framer-motion";
-import { FiMapPin, FiCreditCard, FiArrowRight, FiShoppingBag, FiInfo, FiMail } from "react-icons/fi";
+import { FiMapPin, FiArrowRight, FiShoppingBag, FiInfo, FiMail, FiCreditCard } from "react-icons/fi";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-
-const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
-  const stripe = useStripe();
-  const elements = useElements();
+const PaymentPage = ({ amount, cartItems, userToken }) => {
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [shippingAddress, setShippingAddress] = useState("");
@@ -32,171 +21,104 @@ const CheckoutForm = ({ clientSecret, amount, cartItems, userToken }) => {
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
+
     if (!shippingAddress) {
       showToast('error', 'Please provide a shipping address');
       return;
     }
-    if (!userToken && !guestEmail) {
+    if ((!userToken || userToken === "null" || userToken === "undefined") && !guestEmail) {
       showToast('error', 'Please provide an email address');
       return;
     }
+
     setLoading(true);
 
     try {
-      const { error, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/payment-success`,
+      // 1. Create Razorpay order on backend
+      const orderRes = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/create-razorpay-order`,
+        { amount }
+      );
+      const { orderId, currency, amount: orderAmount } = orderRes.data;
+
+      // 2. Configure Razorpay modal options
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: orderAmount,
+        currency: currency,
+        name: "sancart",
+        description: "Secure Order Payment",
+        order_id: orderId,
+        handler: async (response) => {
+          setLoading(true);
+          try {
+            // 3. Verify Razorpay signature on backend
+            const verifyRes = await axios.post(
+              `${import.meta.env.VITE_BACKEND_URL}/api/orders/verify-payment`,
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }
+            );
+
+            if (verifyRes.data.status === "success") {
+              // 4. Save order to DB
+              await saveOrderToBackend({
+                cartItems,
+                amount,
+                userAddress: shippingAddress,
+                paymentId: response.razorpay_payment_id,
+                userToken,
+                guestEmail: userToken ? undefined : guestEmail,
+              });
+
+              showToast("success", "Payment successful!");
+              navigate("/payment-success");
+
+              // 5. Clear cart
+              if (userToken && userToken !== "null" && userToken !== "undefined") {
+                await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/clearCart`, {
+                  headers: { Authorization: `Bearer ${userToken}` },
+                });
+              } else {
+                clearGuestCart();
+              }
+            } else {
+              showToast("error", "Payment verification failed");
+            }
+          } catch (verifyErr) {
+            console.error("Verification failed", verifyErr);
+            showToast("error", "Payment verification error");
+          } finally {
+            setLoading(false);
+          }
         },
-        redirect: "if_required",
-      });
-
-      if (error) {
-        console.error("Payment error", error.message);
-        showToast('error', error.message || 'Payment failed');
-      } else if (paymentIntent && paymentIntent.status === "succeeded") {
-        await saveOrderToBackend({
-          cartItems,
-          amount,
-          userAddress: shippingAddress,
-          paymentIntent,
-          userToken,
-          guestEmail: userToken ? undefined : guestEmail,
-        });
-        navigate("/payment-success");
-
-        if (userToken && userToken !== "null" && userToken !== "undefined") {
-          await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/clearCart`, {
-            headers: { Authorization: `Bearer ${userToken}` },
-          });
-        } else {
-          clearGuestCart();
+        prefill: {
+          email: guestEmail || "",
+        },
+        theme: {
+          color: "#F97316", // match primary-500 theme color
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            showToast("info", "Payment cancelled");
+          }
         }
-      }
-    } catch (error) {
-      console.error("Error during payment or saving order:", error.message);
+      };
+
+      // 3. Open Razorpay Checkout modal
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } catch (err) {
+      console.error("Razorpay order creation failed", err);
+      showToast("error", "Could not initialize Razorpay checkout");
+      setLoading(false);
     }
-
-    setLoading(false);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto z-10 relative">
-      <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 p-6 md:p-8 bg-white border border-gray-100 rounded-3xl shadow-xl`}>
-        {/* Left Side: Payment Element */}
-        <div className="flex-[1.2] text-start">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-500">
-              <FiCreditCard />
-            </div>
-            <h4 className="text-lg font-bold text-gray-900">Select Payment Method</h4>
-          </div>
-          <div className="border border-gray-100 rounded-2xl p-4 md:p-6 bg-slate-50/50">
-            <PaymentElement />
-          </div>
-        </div>
-
-        {/* Right Side: Order Summary & Address */}
-        <div className="flex-1 text-start flex flex-col justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-accent-50 flex items-center justify-center text-accent-500">
-                <FiShoppingBag />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">Order Summary</h3>
-            </div>
-
-            {/* Total Highlight */}
-            <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl mb-6 flex justify-between items-center">
-              <span className="text-sm text-gray-500 font-medium">Grand Total</span>
-              <strong className="text-xl font-black text-primary-600">₹{amount}</strong>
-            </div>
-
-            {/* Guest Email field */}
-            {(!userToken || userToken === "null" || userToken === "undefined") && (
-              <div className="space-y-2 mb-6">
-                <label className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-wide">
-                  <FiMail /> Contact Email
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                  placeholder="Enter your contact email..."
-                  className="w-full border border-gray-200 rounded-2xl p-3.5 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all text-sm text-gray-800 placeholder-gray-400"
-                />
-              </div>
-            )}
-
-            {/* Shipping Address field */}
-            <div className="space-y-2 mb-6">
-              <label className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-wide">
-                <FiMapPin /> Shipping Address
-              </label>
-              <textarea
-                required
-                value={shippingAddress}
-                onChange={(e) => setShippingAddress(e.target.value)}
-                rows="3"
-                placeholder="Enter your full shipping address..."
-                className="w-full border border-gray-200 rounded-2xl p-3.5 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all text-sm text-gray-800 placeholder-gray-400"
-              />
-            </div>
-
-            <div className="flex items-start gap-2 bg-blue-50/50 border border-blue-100 rounded-2xl p-4 mb-6 text-xs text-blue-700 leading-relaxed">
-              <FiInfo className="mt-0.5 flex-shrink-0" />
-              <span>Payments are processed securely via Stripe.</span>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={!stripe || loading}
-            className="w-full bg-gradient-to-r from-primary-500 to-indigo-600 hover:from-primary-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary-500/10 hover:shadow-xl transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm mt-4"
-          >
-            {loading ? (
-              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <>
-                Confirm & Pay <FiArrowRight size={16} />
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-    </form>
-  );
-};
-
-const PaymentPage = ({ amount, cartItems, userToken }) => {
-  const [clientSecret, setClientSecret] = useState(null);
-
-  useEffect(() => {
-    const createIntent = async () => {
-      try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/orders/create-payment-intent`,
-          { amount }
-        );
-        setClientSecret(res.data.clientSecret);
-      } catch (err) {
-        console.error("Error creating payment intent", err);
-      }
-    };
-    createIntent();
-  }, [amount]);
-
-  const appearance = {
-    theme: "stripe",
-  };
-
-  const options = {
-    clientSecret,
-    appearance,
   };
 
   return (
@@ -231,20 +153,88 @@ const PaymentPage = ({ amount, cartItems, userToken }) => {
         />
       </div>
 
-      {clientSecret ? (
-        <Elements stripe={stripePromise} options={options}>
-          <CheckoutForm
-            amount={amount}
-            cartItems={cartItems}
-            userToken={userToken}
-          />
-        </Elements>
-      ) : (
-        <div className="z-10 flex flex-col items-center gap-4">
-          <span className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-semibold text-gray-500">Initializing secure checkout...</p>
+      <form onSubmit={handlePayment} className="w-full max-w-4xl mx-auto z-10 relative">
+        <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 p-6 md:p-8 bg-white border border-gray-100 rounded-3xl shadow-xl`}>
+          {/* Left Side: Checkout Details */}
+          <div className="flex-[1.2] text-start">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-500">
+                <FiCreditCard />
+              </div>
+              <h4 className="text-lg font-bold text-gray-900">Billing Information</h4>
+            </div>
+
+            {/* Guest Email field */}
+            {(!userToken || userToken === "null" || userToken === "undefined") && (
+              <div className="space-y-2 mb-6">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-wide">
+                  <FiMail /> Contact Email
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  placeholder="Enter your contact email..."
+                  className="w-full border border-gray-200 rounded-2xl p-3.5 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all text-sm text-gray-800 placeholder-gray-400"
+                />
+              </div>
+            )}
+
+            {/* Shipping Address field */}
+            <div className="space-y-2 mb-6">
+              <label className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-wide">
+                <FiMapPin /> Shipping Address
+              </label>
+              <textarea
+                required
+                value={shippingAddress}
+                onChange={(e) => setShippingAddress(e.target.value)}
+                rows="4"
+                placeholder="Enter your full shipping address..."
+                className="w-full border border-gray-200 rounded-2xl p-3.5 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 focus:outline-none transition-all text-sm text-gray-800 placeholder-gray-400"
+              />
+            </div>
+          </div>
+
+          {/* Right Side: Order Summary & Pay */}
+          <div className="flex-1 text-start flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 rounded-lg bg-accent-50 flex items-center justify-center text-accent-500">
+                  <FiShoppingBag />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900">Order Summary</h3>
+              </div>
+
+              {/* Total Highlight */}
+              <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl mb-6 flex justify-between items-center">
+                <span className="text-sm text-gray-500 font-medium">Grand Total</span>
+                <strong className="text-xl font-black text-primary-600">₹{amount}</strong>
+              </div>
+
+              <div className="flex items-start gap-2 bg-blue-50/50 border border-blue-100 rounded-2xl p-4 mb-6 text-xs text-blue-700 leading-relaxed">
+                <FiInfo className="mt-0.5 flex-shrink-0" />
+                <span>Payments are processed securely via Razorpay (supporting Cards, UPI, Netbanking).</span>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-primary-500 to-indigo-600 hover:from-primary-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary-500/10 hover:shadow-xl transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm mt-4"
+            >
+              {loading ? (
+                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  Confirm & Pay <FiArrowRight size={16} />
+                </>
+              )}
+            </button>
+          </div>
         </div>
-      )}
+      </form>
     </div>
   );
 };

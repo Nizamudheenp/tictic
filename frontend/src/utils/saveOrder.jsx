@@ -4,7 +4,7 @@ export const saveOrderToBackend = async ({
   cartItems,
   amount,
   userAddress,
-  paymentIntent,
+  paymentId,
   userToken,
   guestEmail
 }) => {
@@ -21,7 +21,7 @@ export const saveOrderToBackend = async ({
       })),
       totalAmount: amount,
       shippingAddress: userAddress,
-      paymentIntentId: paymentIntent.id,
+      paymentId: paymentId,
       status: "paid",
     };
 

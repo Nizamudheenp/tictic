@@ -11,7 +11,7 @@ const createOrderSchema = z.object({
   ).min(1, 'Order must contain at least one product'),
   totalAmount: z.coerce.number().positive('Total amount must be a positive number'),
   shippingAddress: z.string().trim().min(1, 'Shipping address is required'),
-  paymentIntentId: z.string().trim().min(1, 'Payment intent ID is required'),
+  paymentId: z.string().trim().min(1, 'Payment ID is required'),
   status: z.enum(["processing", "shipped", "paid", "delivered", "cancelled"]).default("processing"),
   guestEmail: z.string().trim().email('Invalid email format').optional().or(z.literal('')),
 });

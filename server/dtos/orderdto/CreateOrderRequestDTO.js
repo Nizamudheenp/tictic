@@ -3,7 +3,7 @@ class CreateOrderRequestDTO {
     this.products = body.products || [];
     this.totalAmount = body.totalAmount ? Number(body.totalAmount) : null;
     this.shippingAddress = body.shippingAddress ? body.shippingAddress.trim() : null;
-    this.paymentIntentId = body.paymentIntentId;
+    this.paymentId = body.paymentId;
     this.status = body.status;
     this.guestEmail = body.guestEmail ? body.guestEmail.trim() : null;
   }

@@ -11,7 +11,7 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ message: "Order must contain at least one product." });
     }
 
-    if (!orderReq.shippingAddress || !orderReq.totalAmount || !orderReq.paymentIntentId || !orderReq.status) {
+    if (!orderReq.shippingAddress || !orderReq.totalAmount || !orderReq.paymentId || !orderReq.status) {
       return res.status(400).json({ message: "Required order/payment data missing." });
     }
 
@@ -21,7 +21,7 @@ exports.createOrder = async (req, res) => {
       products: orderReq.products,
       totalAmount: orderReq.totalAmount,
       shippingAddress: orderReq.shippingAddress,
-      paymentIntentId: orderReq.paymentIntentId,
+      paymentId: orderReq.paymentId,
       status: orderReq.status,
       timestamp: new Date(),
     });

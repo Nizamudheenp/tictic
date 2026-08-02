@@ -46,21 +46,28 @@ const UserOrders = () => {
   ).length;
 
   const getStatusBadge = (status) => {
-    switch (status) {
-      case "Delivered":
+    switch (status?.toLowerCase()) {
+      case "delivered":
         return {
           bg: "bg-emerald-50 text-emerald-700 border-emerald-100",
           icon: <FiCheckCircle className="text-emerald-500" />,
         };
-      case "Pending":
+      case "pending":
+      case "processing":
         return {
           bg: "bg-amber-50 text-amber-700 border-amber-100",
           icon: <FiClock className="text-amber-500 animate-pulse" />,
         };
-      case "Shipped":
+      case "shipped":
         return {
           bg: "bg-blue-50 text-blue-700 border-blue-100",
           icon: <FiTruck className="text-blue-500" />,
+        };
+      case "paid":
+      case "succeeded":
+        return {
+          bg: "bg-indigo-50 text-indigo-700 border-indigo-100",
+          icon: <FiCheckCircle className="text-indigo-500" />,
         };
       default:
         return {
@@ -247,8 +254,8 @@ const UserOrders = () => {
                             >
                               <div className="w-10 h-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center p-1.5 overflow-hidden flex-shrink-0">
                                 <img
-                                  src={item.productId?.images?.[0] || "/placeholder.svg"}
-                                  alt={item.productId?.name}
+                                  src={item.product?.images?.[0] || "/placeholder.svg"}
+                                  alt={item.product?.name}
                                   className="max-w-full max-h-full object-contain"
                                   onError={(e) => {
                                     e.target.src = "/placeholder.svg";
@@ -257,7 +264,7 @@ const UserOrders = () => {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="font-bold text-gray-800 text-xs truncate leading-snug">
-                                  {item.productId?.name || "Product Item"}
+                                  {item.product?.name || "Product Item"}
                                 </p>
                                 <p className="text-[10px] text-gray-400 font-medium mt-0.5">
                                   Quantity: {item.quantity}
