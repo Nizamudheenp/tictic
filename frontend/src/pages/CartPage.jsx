@@ -131,11 +131,11 @@ const CartPage = () => {
                 {/* Image Frame */}
                 <div className="flex-shrink-0 w-28 h-28 bg-slate-50 border border-gray-50 rounded-2xl flex items-center justify-center p-3 overflow-hidden">
                   <img
-                    src={item.product.images?.[0] || "/placeholder.jpg"}
+                    src={item.product.images?.[0] || "/placeholder.svg"}
                     alt={item.product.name}
                     className="max-w-full max-h-full object-contain"
                     onError={(e) => {
-                      e.target.src = "/placeholder.jpg";
+                      e.target.src = "/placeholder.svg";
                     }}
                   />
                 </div>

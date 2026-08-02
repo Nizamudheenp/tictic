@@ -247,11 +247,11 @@ const UserOrders = () => {
                             >
                               <div className="w-10 h-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center p-1.5 overflow-hidden flex-shrink-0">
                                 <img
-                                  src={item.productId?.images?.[0] || "/placeholder.jpg"}
+                                  src={item.productId?.images?.[0] || "/placeholder.svg"}
                                   alt={item.productId?.name}
                                   className="max-w-full max-h-full object-contain"
                                   onError={(e) => {
-                                    e.target.src = "/placeholder.jpg";
+                                    e.target.src = "/placeholder.svg";
                                   }}
                                 />
                               </div>

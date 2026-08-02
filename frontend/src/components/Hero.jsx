@@ -13,20 +13,20 @@ const Hero = () => {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8 w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+
           {/* Left Column: Premium Text Copy */}
           <div className="lg:col-span-7 flex flex-col justify-center text-center lg:text-left items-center lg:items-start">
             <span className="inline-flex self-center lg:self-start items-center gap-1.5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-amber-600 bg-amber-50 rounded-full mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
               Hot Trending Now
             </span>
-            
+
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-tight tracking-tight">
               Curated Finds <br />
               For Your Modern <br />
               <span className="bg-gradient-to-r from-primary-500 to-yellow-400 bg-clip-text text-transparent">Lifestyle</span>
             </h1>
-            
+
             <p className="mt-6 text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
               Discover handpicked viral accessories, daily essentials, and smart novelties designed to elevate your style. Direct shipping, certified quality.
             </p>
@@ -60,7 +60,7 @@ const Hero = () => {
                   }}
                 />
               </div>
-              
+
               {/* Floating Interactive Badge */}
               <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-gray-100 shadow-xl flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary-50 flex items-center justify-center text-primary-500 font-black text-xs sm:text-base">

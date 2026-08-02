@@ -181,11 +181,11 @@ const ProductDetails = () => {
         {/* 1. Image Container (Col 1, Row 1 on Desktop) */}
         <div className="lg:col-start-1 lg:row-start-1 w-full flex justify-center bg-slate-50 rounded-3xl p-8 border border-gray-100 shadow-sm h-[320px] sm:h-[450px] md:h-[500px] flex items-center justify-center overflow-hidden">
           <img
-            src={product.images?.[0] || "/placeholder.jpg"}
+            src={product.images?.[0] || "/placeholder.svg"}
             alt={product.name}
             className="max-w-full max-h-full object-contain transform hover:scale-103 transition-transform duration-500"
             onError={(e) => {
-              e.target.src = "/placeholder.jpg";
+              e.target.src = "/placeholder.svg";
             }}
           />
         </div>

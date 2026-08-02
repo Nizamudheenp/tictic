@@ -222,11 +222,11 @@ const AdminOrders = () => {
                               >
                                 <div className="w-8 h-8 border border-gray-100 bg-white rounded-lg flex items-center justify-center p-1 overflow-hidden flex-shrink-0">
                                   <img
-                                    src={p.productId?.images?.[0] || "/placeholder.jpg"}
+                                    src={p.productId?.images?.[0] || "/placeholder.svg"}
                                     alt={p.productId?.name}
                                     className="max-w-full max-h-full object-contain"
                                     onError={(e) => {
-                                      e.target.src = "/placeholder.jpg";
+                                      e.target.src = "/placeholder.svg";
                                     }}
                                   />
                                 </div>

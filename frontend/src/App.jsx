@@ -38,7 +38,7 @@ const PageLoader = () => (
 function App() {
 
   const location = useLocation();
-  const shouldShowFooter = ['/'].includes(location.pathname);
+  const shouldShowFooter = ['/', '/about', '/contact', '/shop'].includes(location.pathname);
   return (
     <>
       <Header />

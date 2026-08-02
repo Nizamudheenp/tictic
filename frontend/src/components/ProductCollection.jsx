@@ -58,11 +58,11 @@ const ProductCard = ({ product, onClick }) => {
         {/* Constrained Height Image Container */}
         <div className="relative overflow-hidden h-48 w-full bg-slate-50/70 rounded-2xl p-4 flex items-center justify-center transition-colors duration-300 group-hover:bg-slate-50">
           <img
-            src={product.images?.[0] || '/placeholder.jpg'}
+            src={product.images?.[0] || '/placeholder.svg'}
             alt={product.name}
             className="max-w-[85%] max-h-[85%] object-contain transform group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
-              e.target.src = "/placeholder.jpg";
+              e.target.src = "/placeholder.svg";
             }}
           />
           {product.brand && (
