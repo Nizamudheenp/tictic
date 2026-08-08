@@ -4,8 +4,9 @@ export const saveOrderToBackend = async ({
   cartItems,
   amount,
   userAddress,
-  paymentIntent,
-  userToken
+  paymentId,
+  userToken,
+  guestEmail
 }) => {
   try {
     if (!cartItems || cartItems.length === 0) {
@@ -13,24 +14,30 @@ export const saveOrderToBackend = async ({
       return;
     }
 
+    const payload = {
+      products: (cartItems || []).map(item => ({
+        productId: item.product.id || item.product._id,
+        quantity: item.quantity,
+      })),
+      totalAmount: amount,
+      shippingAddress: userAddress,
+      paymentId: paymentId,
+      status: "paid",
+    };
+
+    if (guestEmail) {
+      payload.guestEmail = guestEmail;
+    }
+
+    const headers = {};
+    if (userToken && userToken !== "null" && userToken !== "undefined") {
+      headers.Authorization = `Bearer ${userToken}`;
+    }
+
     const response = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/api/orders/createorder`,
-      {
-        products: (cartItems || []).map(item => ({
-          productId: item.product._id,
-          quantity: item.quantity,
-        }))
-        ,
-        totalAmount: amount,
-        shippingAddress: userAddress,
-        paymentIntentId: paymentIntent.id,
-        status: "paid",
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
+      payload,
+      { headers }
     );
 
     console.log(" Order saved:", response.data);

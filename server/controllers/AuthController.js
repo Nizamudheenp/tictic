@@ -1,31 +1,27 @@
 const UserDB = require("../models/UserModel");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const RegisterRequestDTO = require("../dtos/authdto/RegisterRequestDTO");
+const UserResponseDTO = require("../dtos/authdto/AuthResponseDTO");
+const LoginRequestDTO = require("../dtos/authdto/LoginRequestDTO");
 require("dotenv").config();
 
 exports.registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const userExist = await UserDB.findOne({ email });
+    const registerReq = new RegisterRequestDTO(req.body);
+    const userExist = await UserDB.findOne({ email: registerReq.email });
     if (userExist) {
       return res.status(409).json({ message: "User already exists" });
     }
 
-    const hashed = await bcrypt.hash(password, 10);
-    const newUser = new UserDB({ name, email, password: hashed });
+    const hashed = await bcrypt.hash(registerReq.password, 10);
+    const newUser = new UserDB({ name: registerReq.name, email: registerReq.email, password: hashed });
     await newUser.save();
     const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin, name: newUser.name }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({
+    res.status(201).json({
       token,
-      user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        isAdmin: newUser.isAdmin
-
-      }
+      user: new UserResponseDTO(newUser)
     })
-    res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -33,12 +29,12 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await UserDB.findOne({ email });
+    const loginReq = new LoginRequestDTO(req.body);
+    const user = await UserDB.findOne({ email:loginReq.email });
     if (!user) {
       return res.status(404).json({ message: "user not found" })
     }
-    const isPasswordMatches = await bcrypt.compare(password, user.password)
+    const isPasswordMatches = await bcrypt.compare(loginReq.password, user.password)
     if (!isPasswordMatches) {
       return res.status(400).json({ message: 'password is incorrect' })
     }
@@ -47,12 +43,7 @@ exports.loginUser = async (req, res) => {
 
     res.json({
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin
-      }
+      user: new UserResponseDTO(user)
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

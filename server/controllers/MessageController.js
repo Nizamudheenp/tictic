@@ -1,8 +1,9 @@
 const express  =require("express")
 const nodemailer = require('nodemailer')
+const ContactMessageRequestDTO = require('../dtos/messagedto/ContactMessageRequestDTO');
 
 exports.contactEmail =  async (req, res) => {
-  const { name, email, message } = req.body;
+  const messageReq = new ContactMessageRequestDTO(req.body);
 
   try {
     const transporter = nodemailer.createTransport({
@@ -14,10 +15,10 @@ exports.contactEmail =  async (req, res) => {
     });
 
     const mailOptions = {
-      from: email,
+      from: messageReq.email,
       to: process.env.MAIL_TO, 
-      subject: `New Contact Form Submission from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      subject: `New Contact Form Submission from ${messageReq.name}`,
+      text: `Name: ${messageReq.name}\nEmail: ${messageReq.email}\n\nMessage:\n${messageReq.message}`,
     };
 
     await transporter.sendMail(mailOptions);

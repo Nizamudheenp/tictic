@@ -1,114 +1,114 @@
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation, } from 'react-router-dom';
-import CartPage from "./pages/CartPage"
-import Home from "./pages/Home"
-import LoginPage from "./pages/LoginPage"
-import RegisterPage from "./pages/RegisterPage"
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AdminRoute from './components/AdminRoute';
-import AdminDashboard from './pages/AdminDashboard';
-import AddProduct from './components/AddProduct';
-import EditProduct from './components/EditProduct';
-import Shop from './pages/Shop';
-import ProductDetails from './pages/ProductPage';
-import CheckoutPage from './pages/CheckoutPage';
-import PaymentPage from './pages/PaymentPage';
-import PaymentSuccess from './pages/PaymentSuccess';
-import UserOrders from './pages/UserOrders';
-import AdminOrders from './pages/AdminOrders';
-import About from './components/About';
-import Contact from './pages/Contact';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Toaster } from 'react-hot-toast';
-import ComingSoon from './pages/ComingSoon';
 
 
+// Lazy Load Page Components
+const Home = lazy(() => import('./pages/Home'));
+const Shop = lazy(() => import('./pages/Shop'));
+const ProductDetails = lazy(() => import('./pages/ProductPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+const PaymentPage = lazy(() => import('./pages/PaymentPage'));
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const UserOrders = lazy(() => import('./pages/UserOrders'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AddProduct = lazy(() => import('./components/AddProduct'));
+const EditProduct = lazy(() => import('./components/EditProduct'));
+const AdminOrders = lazy(() => import('./pages/AdminOrders'));
+const Contact = lazy(() => import('./pages/Contact'));
+const About = lazy(() => import('./components/About'));
+const ComingSoon = lazy(() => import('./pages/ComingSoon'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh] mt-16">
+    <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 
 function App() {
 
   const location = useLocation();
-  const shouldShowFooter = ['/'].includes(location.pathname);
+  const shouldShowFooter = ['/', '/about', '/contact', '/shop'].includes(location.pathname);
   return (
     <>
-
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/coming-soon" element={<ComingSoon />} />
-        <Route path="/cart" element={
-          <ProtectedRoute>
-            <CartPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/checkout" element={
-          <ProtectedRoute>
-            <CheckoutPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/payment" element={
-          <ProtectedRoute>
-            <PaymentPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/payment-success" element={
-          <ProtectedRoute>
-            <PaymentSuccess />
-          </ProtectedRoute>
-        } />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path='/myorders' element={
-          <ProtectedRoute>
-            <UserOrders />
-          </ProtectedRoute>
-        } />
-        <Route path='/about' element={<About />} />
-        <Route path="/contact" element={<Contact />} />
 
-        <Route
-          path="/admin/dashboard"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/add-product"
-          element={
-            <AdminRoute>
-              <AddProduct />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/edit-product/:id"
-          element={
-            <AdminRoute>
-              <EditProduct />
-            </AdminRoute>
-          }
-        />
-        <Route path="/admin/orders"
-          element={
-            <AdminRoute>
-              <AdminOrders />
-            </AdminRoute>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path='/myorders' element={
+            <ProtectedRoute>
+              <UserOrders />
+            </ProtectedRoute>
           } />
-      </Routes>
+          <Route path='/about' element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/add-product"
+            element={
+              <AdminRoute>
+                <AddProduct />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/edit-product/:id"
+            element={
+              <AdminRoute>
+                <EditProduct />
+              </AdminRoute>
+            }
+          />
+          <Route path="/admin/orders"
+            element={
+              <AdminRoute>
+                <AdminOrders />
+              </AdminRoute>
+            } />
+          <Route path="*" element={<NotFound />} />
+
+
+        </Routes>
+      </Suspense>
 
       {shouldShowFooter && <Footer />}
 
-      <Toaster 
-        position="top-right" 
+      <Toaster
+        position="bottom-right"
         toastOptions={{
-          duration: 3000,
+          duration: 2000,
           style: {
-            background: '#333',
+            background: '#000',
             color: '#fff',
-            borderRadius: '8px',
+            borderRadius: '10px',
           },
         }}
       />

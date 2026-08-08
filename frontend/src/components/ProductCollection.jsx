@@ -2,46 +2,100 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar, AiTwotoneStar } from 'react-icons/ai';
+import { FiShoppingCart } from 'react-icons/fi';
+import { showToast } from '../utils/toast';
+import { addToGuestCart } from '../utils/guestCart';
 import { motion } from 'framer-motion';
 
 const ProductCard = ({ product, onClick }) => {
+  const navigate = useNavigate();
+
   const renderStars = () => {
     const stars = [];
     const fullStars = Math.floor(product.rating || 0);
     const hasHalfStar = product.rating - fullStars >= 0.5;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<AiFillStar key={`full-${i}`} className="text-yellow-400" />);
+      stars.push(<AiFillStar key={`full-${i}`} className="text-amber-400" />);
     }
-    if (hasHalfStar) stars.push(<AiTwotoneStar key="half" className="text-yellow-400" />);
-    while (stars.length < 5) stars.push(<AiOutlineStar key={`empty-${stars.length}`} className="text-yellow-400/50" />);
+    if (hasHalfStar) stars.push(<AiTwotoneStar key="half" className="text-amber-400" />);
+    while (stars.length < 5) stars.push(<AiOutlineStar key={`empty-${stars.length}`} className="text-gray-200" />);
 
     return stars;
+  };
+
+  const handleAddToCart = async (e) => {
+    e.stopPropagation();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      addToGuestCart(product, 1);
+      showToast("success", "Added to cart!");
+      return;
+    }
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/addToCart`,
+        { productId: product.id, quantity: 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      showToast("success", "Added to cart!");
+    } catch (err) {
+      console.error(err);
+      showToast("error", "Could not add item to cart");
+    }
   };
 
   return (
     <motion.div
       onClick={onClick}
-      className="w-full sm:w-[48%] md:w-[23%] p-4 rounded-2xl border border-slate-100 shadow-md cursor-pointer bg-white"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-gray-100 bg-white p-4 shadow-sm hover:shadow-[0_15px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.2 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      whileHover={{ scale: 1.02, boxShadow: '0px 8px 20px rgba(0,0,0,0.15)' }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.5 }}
       whileTap={{ scale: 0.98 }}
     >
-      <img
-        src={product.images?.[0] || '/placeholder.jpg'}
-        alt={product.name}
-        className="w-full h-64 object-center rounded-xl"
-      />
-      <div className="mt-3 text-start">
-        <span className="text-gray-500 text-xs">{product.brand || 'Brand'}</span>
-        <h5 className="mt-1 text-gray-900 text-sm font-medium truncate">{product.name}</h5>
-        <div className="flex items-center mt-1">
-          <div className="flex">{renderStars()}</div>
-          <span className="ml-1 text-gray-400 text-xs">({product.numReviews || 0})</span>
+      <div>
+        {/* Constrained Height Image Container */}
+        <div className="relative overflow-hidden h-48 w-full bg-slate-50/70 rounded-2xl p-4 flex items-center justify-center transition-colors duration-300 group-hover:bg-slate-50">
+          <img
+            src={product.images?.[0] || '/placeholder.svg'}
+            alt={product.name}
+            className="max-w-[85%] max-h-[85%] object-contain transform group-hover:scale-105 transition-transform duration-500"
+            onError={(e) => {
+              e.target.src = "/placeholder.svg";
+            }}
+          />
+          {product.brand && (
+            <span className="absolute top-3 left-3 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-primary-600 bg-white/95 rounded-md shadow-sm border border-gray-100/50">
+              {product.brand}
+            </span>
+          )}
         </div>
-        <h4 className="mt-2 text-primary-600 font-semibold text-sm">₹ {product.price}</h4>
+
+        {/* Text details */}
+        <div className="px-1 pt-4 pb-1 text-start">
+          <h5 className="text-gray-900 font-extrabold text-sm leading-snug group-hover:text-primary-500 transition-colors truncate">
+            {product.name}
+          </h5>
+          <div className="flex items-center gap-1.5 mt-1.5">
+            <div className="flex text-xs">{renderStars()}</div>
+            <span className="text-gray-400 text-[10px] font-bold">({product.numReviews || 0})</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Card bottom section with Add To Cart button as a block */}
+      <div className="px-1 pt-3 border-t border-gray-50 mt-4 flex flex-col text-start">
+        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Price</span>
+        <h4 className="text-lg font-black text-gray-950 leading-none mt-1">₹{product.price}</h4>
+
+        <button
+          onClick={handleAddToCart}
+          className="w-full mt-3.5 flex items-center justify-center gap-2 py-3 text-xs font-bold rounded-xl text-white bg-gradient-to-r from-primary-500 to-yellow-400 hover:shadow-md active:scale-95 transition-all duration-200"
+        >
+          <FiShoppingCart className="text-sm" />
+          <span>Add to Cart</span>
+        </button>
       </div>
     </motion.div>
   );
@@ -63,7 +117,7 @@ const ProductCollection = ({ title, tag, category, search, limit }) => {
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/products/getproducts?${queryParams.toString()}`
         );
-        setProducts(res.data);
+        setProducts(res.data.products || res.data);
       } catch (err) {
         console.error('Error fetching products:', err);
       }
@@ -74,36 +128,40 @@ const ProductCollection = ({ title, tag, category, search, limit }) => {
   if (!products.length) return null;
 
   return (
-    <section className="max-w-[1300px] mx-auto px-6 md:px-8" id="Product-1">
-      <motion.h2
-        className="text-2xl md:text-3xl font-bold text-gray-900"
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.3 }}
-        transition={{ duration: 0.6 }}
-      >
-        {title}
-      </motion.h2>
-      <motion.p
-        className="text-gray-600 mt-1 mb-6"
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: false }}
-        transition={{ delay: 0.2 }}
-      >
-        Explore our latest selections
-      </motion.p>
+    <section className="max-w-[1300px] mx-auto px-6 md:px-8 py-16" id="Product-1">
+      <div className="max-w-xl text-start mb-10">
+        <motion.h2
+          className="text-2xl md:text-4xl font-extrabold text-gray-950 tracking-tight"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          {title}
+        </motion.h2>
+        <motion.p
+          className="text-gray-500 mt-2 text-base md:text-lg"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          Curated and handpicked trending catalog items.
+        </motion.p>
+      </div>
+
       <motion.div
-        className="flex flex-wrap gap-6 justify-start"
-        initial={{ opacity: 0, y: 30 }}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
       >
         {products.map((product) => (
           <ProductCard
-            key={product._id}
+            key={product.id}
             product={product}
-            onClick={() => navigate(`/product/${product._id}`)}
+            onClick={() => navigate(`/product/${product.id}`)}
           />
         ))}
       </motion.div>
